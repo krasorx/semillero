@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_pesaje_kiosko" model="ir.ui.view">
+        <field name="name">res.config.settings.view.pesaje.kiosko</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="Pesaje Kiosko" name="pesaje_kiosko" groups="base.group_system">
+                    <block title="Empleados del Kiosko">
+                        <setting string="Categoría de Balanceros"
+                            help="Solo los empleados que tengan esta categoría aparecerán en el selector de login del kiosko. Si se deja vacío, aparecen todos los empleados activos.">
+                            <field name="pesaje_kiosko_employee_category_id"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

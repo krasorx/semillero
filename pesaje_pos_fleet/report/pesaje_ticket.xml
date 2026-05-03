@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_pesaje_ticket">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div style="text-align:center; border-bottom:2px solid #333; padding-bottom:12px; margin-bottom:16px;">
+                            <h2 style="margin:0; font-size:20px;">TICKET DE PESAJE</h2>
+                            <h3 style="margin:4px 0 0; font-size:16px; color:#555;"><t t-esc="o.name"/></h3>
+                        </div>
+
+                        <table style="width:100%; border-collapse:collapse; font-size:13px; margin-bottom:16px;">
+                            <tr>
+                                <td style="padding:5px 8px; font-weight:bold; width:40%; background:#f5f5f5;">Camión (Patente)</td>
+                                <td style="padding:5px 8px;"><t t-esc="o.vehicle_id.license_plate or o.vehicle_id.display_name"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:5px 8px; font-weight:bold; background:#f5f5f5;">Chófer</td>
+                                <td style="padding:5px 8px;"><t t-esc="o.driver_id.name or '—'"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:5px 8px; font-weight:bold; background:#f5f5f5;">Material</td>
+                                <td style="padding:5px 8px;"><t t-esc="o.product_id.display_name or '—'"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:5px 8px; font-weight:bold; background:#f5f5f5;">Lote</td>
+                                <td style="padding:5px 8px;"><t t-esc="o.lot_id.name or '—'"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:5px 8px; font-weight:bold; background:#f5f5f5;">Campo</td>
+                                <td style="padding:5px 8px;"><t t-esc="o.campo_id.name or '—'"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:5px 8px; font-weight:bold; background:#f5f5f5;">Híbrido</td>
+                                <td style="padding:5px 8px;"><t t-esc="o.hibrido_id.name or '—'"/></td>
+                            </tr>
+                            <tr t-if="o.is_discard">
+                                <td style="padding:5px 8px; font-weight:bold; background:#f5f5f5;">Descarte</td>
+                                <td style="padding:5px 8px; color:#c00; font-weight:bold;">SÍ</td>
+                            </tr>
+                        </table>
+
+                        <table style="width:100%; border-collapse:collapse; font-size:15px; margin-bottom:16px;">
+                            <thead>
+                                <tr style="background:#333; color:white;">
+                                    <th style="padding:8px 12px; text-align:left;">Concepto</th>
+                                    <th style="padding:8px 12px; text-align:right;">kg</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background:#f9f9f9;">
+                                    <td style="padding:7px 12px;">Peso Bruto</td>
+                                    <td style="padding:7px 12px; text-align:right; font-weight:bold;"><t t-esc="'%.2f' % o.gross_weight"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:7px 12px;">Tara</td>
+                                    <td style="padding:7px 12px; text-align:right;"><t t-esc="'%.2f' % o.tara_weight"/></td>
+                                </tr>
+                                <tr style="background:#e8f5e9; font-size:17px;">
+                                    <td style="padding:10px 12px; font-weight:bold; border-top:2px solid #333;">PESO NETO</td>
+                                    <td style="padding:10px 12px; text-align:right; font-weight:bold; border-top:2px solid #333;">
+                                        <t t-esc="'%.2f' % o.net_weight"/> kg
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table style="width:100%; border-collapse:collapse; font-size:12px; color:#555;">
+                            <tr>
+                                <td style="padding:4px 8px;">Entrada a Planta:</td>
+                                <td style="padding:4px 8px;"><t t-esc="o.entry_datetime and o.entry_datetime.strftime('%d/%m/%Y %H:%M') or '—'"/></td>
+                                <td style="padding:4px 8px;">Salida:</td>
+                                <td style="padding:4px 8px;"><t t-esc="o.exit_datetime and o.exit_datetime.strftime('%d/%m/%Y %H:%M') or '—'"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:4px 8px;">Tiempo en Planta:</td>
+                                <td style="padding:4px 8px;" colspan="3">
+                                    <t t-esc="'%.1f' % o.time_in_plant"/> h
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:4px 8px;">Operador:</td>
+                                <td style="padding:4px 8px;" colspan="3"><t t-esc="o.employee_id.name or '—'"/></td>
+                            </tr>
+                        </table>
+
+                        <t t-if="o.notes">
+                            <div style="margin-top:12px; padding:8px; background:#fffde7; border-left:3px solid #f9a825; font-size:12px;">
+                                <strong>Observaciones:</strong> <t t-esc="o.notes"/>
+                            </div>
+                        </t>
+
+                        <!-- Taras -->
+                        <t t-if="o.tara_ids">
+                            <div style="margin-top:12px;">
+                                <strong style="font-size:12px;">Registro de Taras:</strong>
+                                <table style="width:100%; border-collapse:collapse; font-size:11px; margin-top:4px;">
+                                    <thead>
+                                        <tr style="background:#f0f0f0;">
+                                            <th style="padding:4px 8px; text-align:left;">Fecha/Hora</th>
+                                            <th style="padding:4px 8px; text-align:left;">Tipo</th>
+                                            <th style="padding:4px 8px; text-align:right;">Peso (kg)</th>
+                                            <th style="padding:4px 8px; text-align:left;">Operador</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="o.tara_ids" t-as="tara">
+                                            <tr>
+                                                <td style="padding:3px 8px;"><t t-esc="tara.datetime and tara.datetime.strftime('%d/%m %H:%M') or '—'"/></td>
+                                                <td style="padding:3px 8px;"><t t-esc="tara.tipo"/></td>
+                                                <td style="padding:3px 8px; text-align:right;"><t t-esc="'%.2f' % tara.peso"/></td>
+                                                <td style="padding:3px 8px;"><t t-esc="tara.employee_id.name or '—'"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </t>
+
+                        <div style="margin-top:24px; text-align:center; font-size:11px; color:#999; border-top:1px solid #ddd; padding-top:8px;">
+                            Documento generado automáticamente — Sistema Balanza POS
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

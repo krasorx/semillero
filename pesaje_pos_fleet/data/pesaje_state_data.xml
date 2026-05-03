@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_pesaje" model="ir.sequence">
+            <field name="name">Pesaje</field>
+            <field name="code">pesaje.pesaje</field>
+            <field name="prefix">WB/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="substate_cola" model="pesaje.substate">
+            <field name="name">Cola</field>
+            <field name="sequence">10</field>
+            <field name="color">0</field>
+            <field name="is_problem">False</field>
+        </record>
+        <record id="substate_en_proceso" model="pesaje.substate">
+            <field name="name">En Proceso</field>
+            <field name="sequence">20</field>
+            <field name="color">2</field>
+            <field name="is_problem">False</field>
+        </record>
+        <record id="substate_deposito" model="pesaje.substate">
+            <field name="name">Depósito</field>
+            <field name="sequence">30</field>
+            <field name="color">3</field>
+            <field name="is_problem">False</field>
+        </record>
+        <record id="substate_desgranado" model="pesaje.substate">
+            <field name="name">Desgranado</field>
+            <field name="sequence">40</field>
+            <field name="color">4</field>
+            <field name="is_problem">False</field>
+        </record>
+        <record id="substate_deschalado1" model="pesaje.substate">
+            <field name="name">Deschalado 1</field>
+            <field name="sequence">50</field>
+            <field name="color">6</field>
+            <field name="is_problem">False</field>
+        </record>
+        <record id="substate_deschalado2" model="pesaje.substate">
+            <field name="name">Deschalado 2</field>
+            <field name="sequence">60</field>
+            <field name="color">7</field>
+            <field name="is_problem">False</field>
+        </record>
+        <record id="substate_problema" model="pesaje.substate">
+            <field name="name">Problema</field>
+            <field name="sequence">70</field>
+            <field name="color">1</field>
+            <field name="is_problem">True</field>
+        </record>
+        <record id="substate_terminado" model="pesaje.substate">
+            <field name="name">Terminado</field>
+            <field name="sequence">80</field>
+            <field name="color">10</field>
+            <field name="is_problem">False</field>
+        </record>
+    </data>
+</odoo>

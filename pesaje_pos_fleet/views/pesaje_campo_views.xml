@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pesaje_campo_list" model="ir.ui.view">
+        <field name="name">pesaje.campo.list</field>
+        <field name="model">pesaje.campo</field>
+        <field name="arch" type="xml">
+            <list string="Campos" editable="bottom">
+                <field name="name"/>
+                <field name="location"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_pesaje_campo" model="ir.actions.act_window">
+        <field name="name">Campos</field>
+        <field name="res_model">pesaje.campo</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

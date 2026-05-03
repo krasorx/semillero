@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_pesaje_root" name="Pesajes" sequence="50"
+              web_icon="pesaje_pos_fleet,static/description/icon.png"/>
+
+    <menuitem id="menu_pesaje_main" name="Operaciones" parent="menu_pesaje_root" sequence="10"/>
+    <menuitem id="menu_pesaje_pos" name="Abrir Balanza POS" parent="menu_pesaje_main"
+              action="action_pesaje_pos_screen" sequence="1"/>
+    <menuitem id="menu_pesaje_pesajes" name="Pesajes" parent="menu_pesaje_main"
+              action="action_pesaje_pesaje" sequence="10"/>
+
+    <menuitem id="menu_pesaje_reportes" name="Reportes" parent="menu_pesaje_root" sequence="80"/>
+    <menuitem id="menu_pesaje_reporte_wizard" name="Generar Reporte" parent="menu_pesaje_reportes"
+              action="action_report_pesaje_wizard" sequence="10"/>
+
+    <menuitem id="menu_pesaje_config" name="Configuración" parent="menu_pesaje_root" sequence="90"/>
+    <menuitem id="menu_pesaje_substates" name="Subestados" parent="menu_pesaje_config"
+              action="action_pesaje_substate" sequence="10"/>
+    <menuitem id="menu_pesaje_campos" name="Campos" parent="menu_pesaje_config"
+              action="action_pesaje_campo" sequence="20"/>
+    <menuitem id="menu_pesaje_hibridos" name="Híbridos" parent="menu_pesaje_config"
+              action="action_pesaje_hibrido" sequence="30"/>
+</odoo>

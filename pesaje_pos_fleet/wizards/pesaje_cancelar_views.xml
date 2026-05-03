@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pesaje_cancelar_form" model="ir.ui.view">
+        <field name="name">pesaje.cancelar.form</field>
+        <field name="model">pesaje.cancelar</field>
+        <field name="arch" type="xml">
+            <form string="Cancelar Pesaje">
+                <group>
+                    <field name="pesaje_id" readonly="1"/>
+                    <field name="reason" placeholder="Motivo de la cancelación..."/>
+                </group>
+                <footer>
+                    <button name="action_cancel" string="Cancelar Pesaje" type="object" class="btn-danger"/>
+                    <button string="Cerrar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

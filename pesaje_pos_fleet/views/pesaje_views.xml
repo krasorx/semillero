@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pesaje_list" model="ir.ui.view">
+        <field name="name">pesaje.pesaje.list</field>
+        <field name="model">pesaje.pesaje</field>
+        <field name="arch" type="xml">
+            <list string="Pesajes" decoration-danger="move_failed" decoration-success="state=='completado'" decoration-muted="state=='cancelado'">
+                <field name="name"/>
+                <field name="state" widget="badge" decoration-success="state=='completado'" decoration-warning="state=='en_planta'" decoration-danger="state=='cancelado'"/>
+                <field name="substate_id"/>
+                <field name="vehicle_id"/>
+                <field name="driver_id"/>
+                <field name="product_id"/>
+                <field name="gross_weight"/>
+                <field name="net_weight"/>
+                <field name="entry_datetime"/>
+                <field name="time_in_plant"/>
+                <field name="move_failed" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_pesaje_form" model="ir.ui.view">
+        <field name="name">pesaje.pesaje.form</field>
+        <field name="model">pesaje.pesaje</field>
+        <field name="arch" type="xml">
+            <form string="Pesaje">
+                <header>
+                    <button name="action_confirm" string="Confirmar" type="object" invisible="state != 'precargado'" class="btn-primary"/>
+                    <button name="action_arrive_outside" string="Camión Llegó" type="object" invisible="state != 'en_camino'" class="btn-primary"/>
+                    <button name="action_enter_plant" string="Ingresar a Planta" type="object" invisible="state != 'fuera_planta'" class="btn-primary"/>
+                    <button name="action_complete" string="Completar" type="object" invisible="state != 'en_planta'" class="btn-success"/>
+                    <button name="action_retry_stock_move" string="Reintentar Stock" type="object" invisible="not move_failed" class="btn-warning"/>
+                    <button name="action_open_cancel_wizard" string="Cancelar" type="object" invisible="state in ('completado', 'cancelado')" class="btn-danger"/>
+                    <field name="state" widget="statusbar" statusbar_visible="precargado,en_camino,fuera_planta,en_planta,completado"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Vehículo">
+                            <field name="vehicle_id"/>
+                            <field name="driver_id"/>
+                            <field name="employee_id"/>
+                        </group>
+                        <group string="Estado">
+                            <field name="substate_id" invisible="state != 'en_planta'"/>
+                            <field name="entry_datetime"/>
+                            <field name="exit_datetime"/>
+                            <field name="time_in_plant"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Carga">
+                            <field name="product_id"/>
+                            <field name="lot_id"/>
+                            <field name="campo_id"/>
+                            <field name="hibrido_id"/>
+                            <field name="is_discard"/>
+                        </group>
+                        <group string="Pesaje">
+                            <field name="gross_weight"/>
+                            <field name="tara_weight"/>
+                            <field name="net_weight"/>
+                            <field name="uom_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Taras">
+                            <field name="tara_ids">
+                                <list editable="bottom">
+                                    <field name="datetime"/>
+                                    <field name="tipo"/>
+                                    <field name="peso"/>
+                                    <field name="employee_id"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Inventario">
+                            <group>
+                                <field name="picking_id" readonly="1"/>
+                                <field name="move_failed" readonly="1"/>
+                            </group>
+                        </page>
+                        <page string="Notas y Adjuntos">
+                            <field name="notes"/>
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </page>
+                        <page string="Cancelación" invisible="state != 'cancelado'">
+                            <field name="cancel_reason" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pesaje_kanban" model="ir.ui.view">
+        <field name="name">pesaje.pesaje.kanban</field>
+        <field name="model">pesaje.pesaje</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="state"/>
+                <field name="substate_id"/>
+                <field name="vehicle_id"/>
+                <field name="driver_id"/>
+                <field name="product_id"/>
+                <field name="net_weight"/>
+                <field name="entry_datetime"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <strong><field name="name"/></strong>
+                            <div><field name="vehicle_id"/> — <field name="driver_id"/></div>
+                            <div><field name="product_id"/></div>
+                            <div t-if="record.substate_id.value">Subestado: <field name="substate_id"/></div>
+                            <div>Neto: <field name="net_weight"/> kg</div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_pesaje_search" model="ir.ui.view">
+        <field name="name">pesaje.pesaje.search</field>
+        <field name="model">pesaje.pesaje</field>
+        <field name="arch" type="xml">
+            <search string="Pesajes">
+                <field name="name" string="Referencia"/>
+                <field name="vehicle_id"/>
+                <field name="driver_id"/>
+                <field name="product_id"/>
+                <!-- Filtros de estado -->
+                <filter string="En Planta" name="en_planta" domain="[('state','=','en_planta')]"/>
+                <filter string="Fuera de Planta" name="fuera_planta" domain="[('state','=','fuera_planta')]"/>
+                <filter string="En Camino" name="en_camino" domain="[('state','=','en_camino')]"/>
+                <separator/>
+                <filter string="Descarte" name="descarte" domain="[('is_discard','=',True)]"/>
+                <filter string="Stock Fallido" name="move_failed" domain="[('move_failed','=',True)]"/>
+                <separator/>
+                <!-- Group By — en Odoo 19 van sin wrapper <group>, Odoo los categoriza solo -->
+                <filter string="Por Estado" name="group_state" context="{'group_by':'state'}"/>
+                <filter string="Por Producto" name="group_product" context="{'group_by':'product_id'}"/>
+                <filter string="Por Vehículo" name="group_vehicle" context="{'group_by':'vehicle_id'}"/>
+                <filter string="Por Chófer" name="group_driver" context="{'group_by':'driver_id'}"/>
+                <filter string="Por Campo" name="group_campo" context="{'group_by':'campo_id'}"/>
+                <filter string="Por Fecha" name="group_date" context="{'group_by':'entry_datetime:day'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_pesaje_pivot" model="ir.ui.view">
+        <field name="name">pesaje.pesaje.pivot</field>
+        <field name="model">pesaje.pesaje</field>
+        <field name="arch" type="xml">
+            <pivot string="Análisis de Pesajes">
+                <field name="product_id" type="row"/>
+                <field name="state" type="col"/>
+                <field name="net_weight" type="measure"/>
+                <field name="gross_weight" type="measure"/>
+                <field name="time_in_plant" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_pesaje_graph" model="ir.ui.view">
+        <field name="name">pesaje.pesaje.graph</field>
+        <field name="model">pesaje.pesaje</field>
+        <field name="arch" type="xml">
+            <graph string="Pesajes" type="bar">
+                <field name="product_id" type="row"/>
+                <field name="net_weight" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_pesaje_pesaje" model="ir.actions.act_window">
+        <field name="name">Pesajes</field>
+        <field name="res_model">pesaje.pesaje</field>
+        <field name="view_mode">list,kanban,pivot,graph,form</field>
+        <field name="context">{'search_default_en_planta': 1}</field>
+    </record>
+
+    <!-- Wizard cancelar action -->
+    <record id="action_pesaje_cancelar_wizard" model="ir.actions.act_window">
+        <field name="name">Cancelar Pesaje</field>
+        <field name="res_model">pesaje.cancelar</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_pesaje_id': active_id}</field>
+    </record>
+</odoo>

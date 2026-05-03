@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Ticket individual -->
+    <record id="action_report_pesaje_ticket" model="ir.actions.report">
+        <field name="name">Ticket de Pesaje</field>
+        <field name="model">pesaje.pesaje</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pesaje_pos_fleet.report_pesaje_ticket</field>
+        <field name="report_file">pesaje_pos_fleet.report_pesaje_ticket</field>
+        <field name="binding_model_id" ref="model_pesaje_pesaje"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <!-- Reporte diario (desde wizard) -->
+    <record id="action_report_pesaje_diario" model="ir.actions.report">
+        <field name="name">Reporte Diario de Pesajes</field>
+        <field name="model">pesaje.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pesaje_pos_fleet.report_pesaje_diario</field>
+        <field name="report_file">pesaje_pos_fleet.report_pesaje_diario</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <!-- Reporte por vehículo/chófer -->
+    <record id="action_report_pesaje_vehiculo" model="ir.actions.report">
+        <field name="name">Reporte por Vehículo / Chófer</field>
+        <field name="model">pesaje.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pesaje_pos_fleet.report_pesaje_vehiculo</field>
+        <field name="report_file">pesaje_pos_fleet.report_pesaje_vehiculo</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <!-- Reporte descartes -->
+    <record id="action_report_pesaje_descarte" model="ir.actions.report">
+        <field name="name">Reporte de Descartes</field>
+        <field name="model">pesaje.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pesaje_pos_fleet.report_pesaje_descarte</field>
+        <field name="report_file">pesaje_pos_fleet.report_pesaje_descarte</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <!-- Reporte tiempos en planta -->
+    <record id="action_report_pesaje_tiempos" model="ir.actions.report">
+        <field name="name">Tiempos en Planta</field>
+        <field name="model">pesaje.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pesaje_pos_fleet.report_pesaje_tiempos</field>
+        <field name="report_file">pesaje_pos_fleet.report_pesaje_tiempos</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+</odoo>

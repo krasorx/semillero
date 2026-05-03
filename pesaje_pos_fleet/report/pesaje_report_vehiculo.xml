@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_pesaje_vehiculo">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="pesajes" t-value="o._get_pesajes()"/>
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div style="text-align:center; border-bottom:2px solid #333; padding-bottom:10px; margin-bottom:16px;">
+                            <h2 style="margin:0;">REPORTE POR VEHÍCULO / CHÓFER</h2>
+                            <p style="margin:4px 0 0; color:#555; font-size:13px;">
+                                <t t-esc="o.date_from"/> — <t t-esc="o.date_to"/>
+                                <t t-if="o.vehicle_id"> | Camión: <t t-esc="o.vehicle_id.license_plate or o.vehicle_id.display_name"/></t>
+                                <t t-if="o.driver_id"> | Chófer: <t t-esc="o.driver_id.name"/></t>
+                            </p>
+                        </div>
+
+                        <table style="width:100%; border-collapse:collapse; font-size:11px;">
+                            <thead>
+                                <tr style="background:#333; color:white;">
+                                    <th style="padding:6px 10px; text-align:left;">Ref.</th>
+                                    <th style="padding:6px 10px; text-align:left;">Camión</th>
+                                    <th style="padding:6px 10px; text-align:left;">Chófer</th>
+                                    <th style="padding:6px 10px; text-align:left;">Material / Lote</th>
+                                    <th style="padding:6px 10px; text-align:right;">Bruto (kg)</th>
+                                    <th style="padding:6px 10px; text-align:right;">Tara (kg)</th>
+                                    <th style="padding:6px 10px; text-align:right;">Neto (kg)</th>
+                                    <th style="padding:6px 10px; text-align:center;">Fecha</th>
+                                    <th style="padding:6px 10px; text-align:center;">Desc.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="pesajes" t-as="p">
+                                    <tr t-att-style="'background:#fff8e1;' if p.is_discard else ('background:#f9f9f9;' if p_index % 2 == 0 else '')">
+                                        <td style="padding:5px 10px;"><t t-esc="p.name"/></td>
+                                        <td style="padding:5px 10px;"><t t-esc="p.vehicle_id.license_plate or '—'"/></td>
+                                        <td style="padding:5px 10px;"><t t-esc="p.driver_id.name or '—'"/></td>
+                                        <td style="padding:5px 10px;">
+                                            <t t-esc="p.product_id.display_name or '—'"/>
+                                            <t t-if="p.lot_id"> / <t t-esc="p.lot_id.name"/></t>
+                                        </td>
+                                        <td style="padding:5px 10px; text-align:right;"><t t-esc="'%.2f' % p.gross_weight"/></td>
+                                        <td style="padding:5px 10px; text-align:right;"><t t-esc="'%.2f' % p.tara_weight"/></td>
+                                        <td style="padding:5px 10px; text-align:right; font-weight:bold;"><t t-esc="'%.2f' % p.net_weight"/></td>
+                                        <td style="padding:5px 10px; text-align:center;"><t t-esc="p.exit_datetime and p.exit_datetime.strftime('%d/%m/%Y') or '—'"/></td>
+                                        <td style="padding:5px 10px; text-align:center; color:#c00;"><t t-if="p.is_discard">&#10003;</t></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tfoot>
+                                <tr style="background:#e8f5e9; font-weight:bold; border-top:2px solid #333;">
+                                    <td colspan="4" style="padding:7px 10px;">TOTALES (<t t-esc="len(pesajes)"/> pesajes)</td>
+                                    <td style="padding:7px 10px; text-align:right;"><t t-esc="'%.2f' % sum(pesajes.mapped('gross_weight'))"/></td>
+                                    <td style="padding:7px 10px; text-align:right;"><t t-esc="'%.2f' % sum(pesajes.mapped('tara_weight'))"/></td>
+                                    <td style="padding:7px 10px; text-align:right;"><t t-esc="'%.2f' % sum(pesajes.mapped('net_weight'))"/></td>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

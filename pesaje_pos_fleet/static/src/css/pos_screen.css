@@ -1,0 +1,419 @@
+/* ============================================================
+   PESAJE POS — Dark touch-friendly UI
+   ============================================================ */
+
+:root {
+  --bg-900: #111827;
+  --bg-800: #1f2937;
+  --bg-700: #374151;
+  --bg-600: #4b5563;
+  --text-white: #f9fafb;
+  --text-300: #d1d5db;
+  --text-400: #9ca3af;
+  --green-500: #22c55e;
+  --green-600: #16a34a;
+  --green-700: #15803d;
+  --yellow-500: #eab308;
+  --yellow-600: #ca8a04;
+  --red-500: #ef4444;
+  --red-600: #dc2626;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --orange-500: #f97316;
+  --purple-500: #a855f7;
+  --gray-500: #6b7280;
+  --radius: 0.5rem;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.4);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.pos-screen {
+  height: 100vh;
+  width: 100vw;
+  background: var(--bg-900);
+  color: var(--text-white);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Layout ── */
+.pos-flex { display: flex; }
+.pos-flex-col { display: flex; flex-direction: column; }
+.pos-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.pos-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+.pos-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+.pos-h-full { height: 100%; }
+.pos-h-screen { height: 100vh; }
+.pos-w-full { width: 100%; }
+.pos-flex-1 { flex: 1; }
+.pos-items-center { align-items: center; }
+.pos-justify-center { justify-content: center; }
+.pos-justify-between { justify-content: space-between; }
+.pos-gap-2 { gap: 0.5rem; }
+.pos-gap-3 { gap: 0.75rem; }
+.pos-gap-4 { gap: 1rem; }
+.pos-overflow-y { overflow-y: auto; }
+.pos-overflow-hidden { overflow: hidden; }
+.pos-relative { position: relative; }
+.pos-absolute { position: absolute; }
+.pos-inset-0 { inset: 0; }
+.pos-z-50 { z-index: 50; }
+
+/* ── Spacing ── */
+.pos-p-2 { padding: 0.5rem; }
+.pos-p-3 { padding: 0.75rem; }
+.pos-p-4 { padding: 1rem; }
+.pos-p-6 { padding: 1.5rem; }
+.pos-p-8 { padding: 2rem; }
+.pos-px-4 { padding-left: 1rem; padding-right: 1rem; }
+.pos-py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+.pos-mb-2 { margin-bottom: 0.5rem; }
+.pos-mb-4 { margin-bottom: 1rem; }
+.pos-mt-2 { margin-top: 0.5rem; }
+.pos-mt-4 { margin-top: 1rem; }
+
+/* ── Typography ── */
+.pos-text-xs { font-size: 0.75rem; }
+.pos-text-sm { font-size: 0.875rem; }
+.pos-text-base { font-size: 1rem; }
+.pos-text-lg { font-size: 1.125rem; }
+.pos-text-xl { font-size: 1.25rem; }
+.pos-text-2xl { font-size: 1.5rem; }
+.pos-text-3xl { font-size: 1.875rem; }
+.pos-text-4xl { font-size: 2.25rem; }
+.pos-font-bold { font-weight: 700; }
+.pos-font-semibold { font-weight: 600; }
+.pos-font-medium { font-weight: 500; }
+.pos-text-center { text-align: center; }
+.pos-text-white { color: var(--text-white); }
+.pos-text-gray { color: var(--text-400); }
+.pos-text-gray-300 { color: var(--text-300); }
+.pos-text-green { color: var(--green-500); }
+.pos-text-red { color: var(--red-500); }
+.pos-text-yellow { color: var(--yellow-500); }
+.pos-text-blue { color: var(--blue-500); }
+.pos-truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── Backgrounds ── */
+.pos-bg-900 { background: var(--bg-900); }
+.pos-bg-800 { background: var(--bg-800); }
+.pos-bg-700 { background: var(--bg-700); }
+.pos-bg-600 { background: var(--bg-600); }
+.pos-bg-green { background: var(--green-600); }
+.pos-bg-red { background: var(--red-600); }
+.pos-bg-yellow { background: var(--yellow-600); }
+.pos-bg-blue { background: var(--blue-600); }
+.pos-bg-orange { background: var(--orange-500); }
+.pos-bg-purple { background: var(--purple-500); }
+
+/* ── Borders & Radius ── */
+.pos-rounded { border-radius: var(--radius); }
+.pos-rounded-lg { border-radius: 0.75rem; }
+.pos-rounded-xl { border-radius: 1rem; }
+.pos-rounded-full { border-radius: 9999px; }
+.pos-border { border: 1px solid var(--bg-600); }
+.pos-border-2 { border: 2px solid var(--bg-600); }
+.pos-border-green { border-color: var(--green-500) !important; }
+.pos-border-blue { border-color: var(--blue-500) !important; }
+
+/* ── Buttons ── */
+.pos-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  color: var(--text-white);
+  user-select: none;
+  -webkit-user-select: none;
+}
+.pos-btn:active { transform: scale(0.97); opacity: 0.9; }
+.pos-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.pos-btn-lg { min-height: 4rem; font-size: 1.125rem; padding: 1rem 1.5rem; }
+.pos-btn-xl { min-height: 5rem; font-size: 1.25rem; padding: 1.25rem 2rem; }
+.pos-btn-green { background: var(--green-600); }
+.pos-btn-green:hover:not(:disabled) { background: var(--green-700); }
+.pos-btn-red { background: var(--red-600); }
+.pos-btn-red:hover:not(:disabled) { background: #b91c1c; }
+.pos-btn-blue { background: var(--blue-600); }
+.pos-btn-blue:hover:not(:disabled) { background: #1d4ed8; }
+.pos-btn-yellow { background: var(--yellow-600); }
+.pos-btn-yellow:hover:not(:disabled) { background: #a16207; }
+.pos-btn-gray { background: var(--bg-600); }
+.pos-btn-gray:hover:not(:disabled) { background: var(--bg-700); }
+.pos-btn-orange { background: var(--orange-500); }
+.pos-btn-purple { background: var(--purple-500); }
+
+/* ── Cards ── */
+.pos-card {
+  background: var(--bg-800);
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--bg-600);
+}
+.pos-card-selected {
+  border-color: var(--blue-500) !important;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+}
+.pos-card:hover { border-color: var(--bg-500); cursor: pointer; }
+
+/* ── KPI Card ── */
+.pos-kpi-card {
+  background: var(--bg-800);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  text-align: center;
+  border: 1px solid var(--bg-600);
+}
+.pos-kpi-value { font-size: 2.5rem; font-weight: 700; line-height: 1; }
+.pos-kpi-label { font-size: 0.75rem; color: var(--text-400); margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* ── Header ── */
+.pos-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-800);
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--bg-600);
+  flex-shrink: 0;
+}
+
+/* ── PIN pad ── */
+.pos-pin-display {
+  background: var(--bg-700);
+  border-radius: var(--radius);
+  padding: 1rem 2rem;
+  font-size: 2.5rem;
+  letter-spacing: 0.5rem;
+  text-align: center;
+  min-width: 14rem;
+  min-height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--bg-600);
+}
+.pos-pin-btn {
+  background: var(--bg-700);
+  border: 1px solid var(--bg-600);
+  border-radius: var(--radius);
+  color: var(--text-white);
+  font-size: 1.75rem;
+  font-weight: 600;
+  min-height: 4.5rem;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.pos-pin-btn:hover { background: var(--bg-600); }
+.pos-pin-btn:active { background: var(--bg-500, #6b7280); transform: scale(0.95); }
+
+/* ── Select ── */
+.pos-select {
+  width: 100%;
+  background: var(--bg-700);
+  color: var(--text-white);
+  border: 1px solid var(--bg-600);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  outline: none;
+  cursor: pointer;
+}
+.pos-select:focus { border-color: var(--blue-500); }
+
+/* ── Input ── */
+.pos-input {
+  width: 100%;
+  background: var(--bg-700);
+  color: var(--text-white);
+  border: 1px solid var(--bg-600);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  outline: none;
+}
+.pos-input:focus { border-color: var(--blue-500); }
+.pos-label { display: block; font-size: 0.875rem; color: var(--text-400); margin-bottom: 0.375rem; }
+
+/* ── Modal ── */
+.pos-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.pos-modal {
+  background: var(--bg-800);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  width: 90%;
+  max-width: 36rem;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7);
+  border: 1px solid var(--bg-600);
+}
+.pos-modal-lg { max-width: 52rem; }
+.pos-modal-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.25rem; }
+
+/* ── Weight input ── */
+.pos-weight-display {
+  background: var(--bg-700);
+  border-radius: var(--radius);
+  padding: 1rem;
+  font-size: 3.5rem;
+  font-weight: 700;
+  text-align: right;
+  letter-spacing: 0.05rem;
+  min-height: 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border: 2px solid var(--bg-600);
+  margin-bottom: 1rem;
+  color: var(--green-500);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Status badges ── */
+.pos-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.pos-badge-green { background: rgba(34,197,94,0.2); color: var(--green-500); }
+.pos-badge-yellow { background: rgba(234,179,8,0.2); color: var(--yellow-500); }
+.pos-badge-red { background: rgba(239,68,68,0.2); color: var(--red-500); }
+.pos-badge-blue { background: rgba(59,130,246,0.2); color: var(--blue-500); }
+.pos-badge-gray { background: rgba(107,114,128,0.2); color: var(--text-400); }
+.pos-badge-orange { background: rgba(249,115,22,0.2); color: var(--orange-500); }
+
+/* ── Offline banner ── */
+.pos-offline-banner {
+  background: var(--red-600);
+  color: white;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* ── Truck card ── */
+.pos-truck-card {
+  background: var(--bg-800);
+  border: 1px solid var(--bg-600);
+  border-radius: var(--radius);
+  padding: 0.875rem;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.pos-truck-card:hover { border-color: var(--blue-500); }
+.pos-truck-card.selected { border-color: var(--blue-500); background: rgba(59,130,246,0.1); }
+.pos-truck-card.problem { border-color: var(--red-500); }
+.pos-truck-card-plate { font-size: 1.125rem; font-weight: 700; }
+.pos-truck-card-info { font-size: 0.8rem; color: var(--text-400); margin-top: 0.25rem; }
+.pos-truck-time { font-size: 0.75rem; color: var(--text-400); }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-900); }
+::-webkit-scrollbar-thumb { background: var(--bg-600); border-radius: 3px; }
+
+/* ── Toggle ── */
+.pos-toggle {
+  position: relative;
+  display: inline-block;
+  width: 3.5rem;
+  height: 2rem;
+}
+.pos-toggle input { opacity: 0; width: 0; height: 0; }
+.pos-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: var(--bg-600);
+  border-radius: 9999px;
+  transition: background 0.2s;
+}
+.pos-toggle-slider::before {
+  content: '';
+  position: absolute;
+  height: 1.5rem;
+  width: 1.5rem;
+  left: 0.25rem;
+  bottom: 0.25rem;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+.pos-toggle input:checked + .pos-toggle-slider { background: var(--green-600); }
+.pos-toggle input:checked + .pos-toggle-slider::before { transform: translateX(1.5rem); }
+
+/* ── Divider ── */
+.pos-divider { border: none; border-top: 1px solid var(--bg-600); margin: 0.75rem 0; }
+
+/* ── Sync indicator ── */
+.pos-sync-dot {
+  width: 0.5rem; height: 0.5rem;
+  border-radius: 50%;
+  display: inline-block;
+}
+.pos-sync-dot.synced { background: var(--green-500); }
+.pos-sync-dot.pending { background: var(--yellow-500); animation: pulse 1.5s infinite; }
+.pos-sync-dot.error { background: var(--red-500); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ── Spinner ── */
+.pos-spinner {
+  width: 2rem; height: 2rem;
+  border: 3px solid var(--bg-600);
+  border-top-color: var(--blue-500);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Column panels ── */
+.pos-panel-left {
+  width: 22rem;
+  min-width: 22rem;
+  background: var(--bg-800);
+  border-right: 1px solid var(--bg-600);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.pos-panel-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}

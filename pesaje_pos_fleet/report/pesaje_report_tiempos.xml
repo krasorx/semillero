@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_pesaje_tiempos">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="pesajes" t-value="o._get_pesajes()"/>
+                <t t-set="pesajes_con_tiempo" t-value="pesajes.filtered(lambda p: p.time_in_plant > 0)"/>
+                <t t-set="promedio" t-value="sum(pesajes_con_tiempo.mapped('time_in_plant')) / len(pesajes_con_tiempo) if pesajes_con_tiempo else 0"/>
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div style="text-align:center; border-bottom:2px solid #333; padding-bottom:10px; margin-bottom:16px;">
+                            <h2 style="margin:0;">TIEMPOS EN PLANTA</h2>
+                            <p style="margin:4px 0 0; color:#555; font-size:13px;">
+                                Período: <t t-esc="o.date_from"/> al <t t-esc="o.date_to"/>
+                            </p>
+                        </div>
+
+                        <div style="display:flex; gap:20px; margin-bottom:20px;">
+                            <div style="flex:1; background:#e8f5e9; padding:12px; border-radius:4px; text-align:center;">
+                                <div style="font-size:24px; font-weight:bold;"><t t-esc="len(pesajes)"/></div>
+                                <div style="font-size:11px; color:#555;">Pesajes Completados</div>
+                            </div>
+                            <div style="flex:1; background:#e3f2fd; padding:12px; border-radius:4px; text-align:center;">
+                                <div style="font-size:24px; font-weight:bold;"><t t-esc="'%.1f' % promedio"/> h</div>
+                                <div style="font-size:11px; color:#555;">Tiempo Promedio</div>
+                            </div>
+                            <div style="flex:1; background:#fff3e0; padding:12px; border-radius:4px; text-align:center;">
+                                <div style="font-size:24px; font-weight:bold;"><t t-esc="'%.1f' % (max(pesajes_con_tiempo.mapped('time_in_plant')) if pesajes_con_tiempo else 0)"/> h</div>
+                                <div style="font-size:11px; color:#555;">Tiempo Máximo</div>
+                            </div>
+                            <div style="flex:1; background:#fce4ec; padding:12px; border-radius:4px; text-align:center;">
+                                <div style="font-size:24px; font-weight:bold;"><t t-esc="'%.1f' % (min(pesajes_con_tiempo.mapped('time_in_plant')) if pesajes_con_tiempo else 0)"/> h</div>
+                                <div style="font-size:11px; color:#555;">Tiempo Mínimo</div>
+                            </div>
+                        </div>
+
+                        <table style="width:100%; border-collapse:collapse; font-size:11px;">
+                            <thead>
+                                <tr style="background:#333; color:white;">
+                                    <th style="padding:6px 10px; text-align:left;">Ref.</th>
+                                    <th style="padding:6px 10px; text-align:left;">Camión</th>
+                                    <th style="padding:6px 10px; text-align:left;">Chófer</th>
+                                    <th style="padding:6px 10px; text-align:left;">Material</th>
+                                    <th style="padding:6px 10px; text-align:center;">Entrada</th>
+                                    <th style="padding:6px 10px; text-align:center;">Salida</th>
+                                    <th style="padding:6px 10px; text-align:right;">Tiempo (h)</th>
+                                    <th style="padding:6px 10px; text-align:right;">Neto (kg)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="pesajes" t-as="p">
+                                    <t t-set="es_lento" t-value="p.time_in_plant > promedio * 1.5 if promedio else False"/>
+                                    <tr t-att-style="'background:#fff3e0;' if es_lento else ('background:#f9f9f9;' if p_index % 2 == 0 else '')">
+                                        <td style="padding:5px 10px;"><t t-esc="p.name"/></td>
+                                        <td style="padding:5px 10px;"><t t-esc="p.vehicle_id.license_plate or '—'"/></td>
+                                        <td style="padding:5px 10px;"><t t-esc="p.driver_id.name or '—'"/></td>
+                                        <td style="padding:5px 10px;"><t t-esc="p.product_id.display_name or '—'"/></td>
+                                        <td style="padding:5px 10px; text-align:center;"><t t-esc="p.entry_datetime and p.entry_datetime.strftime('%H:%M') or '—'"/></td>
+                                        <td style="padding:5px 10px; text-align:center;"><t t-esc="p.exit_datetime and p.exit_datetime.strftime('%H:%M') or '—'"/></td>
+                                        <td t-att-style="'padding:5px 10px; text-align:right; font-weight:bold; color:#e65100;' if es_lento else 'padding:5px 10px; text-align:right; font-weight:bold;'">
+                                            <t t-esc="'%.2f' % p.time_in_plant"/>
+                                        </td>
+                                        <td style="padding:5px 10px; text-align:right;"><t t-esc="'%.0f' % p.net_weight"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div style="margin-top:8px; font-size:10px; color:#888;">
+                            * Filas en naranja: tiempo superior al 150% del promedio.
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

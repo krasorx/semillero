@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Categoría de empleado para identificar a los operadores del kiosko de pesaje -->
+    <record id="category_balancero" model="hr.employee.category">
+        <field name="name">Balancero</field>
+        <field name="color">7</field>
+    </record>
+</odoo>

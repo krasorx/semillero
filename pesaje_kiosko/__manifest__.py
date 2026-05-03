@@ -1,0 +1,30 @@
+{
+    'name': 'Pesaje Kiosko',
+    'version': '19.0.1.1.0',
+    'summary': 'Interfaz kiosko centralizada para pesajes — pantalla única con tabs y diseño minimalista',
+    'author': 'Balanza',
+    'category': 'Operations/Inventory',
+    'depends': ['pesaje_pos_fleet'],
+    'data': [
+        'data/kiosko_data.xml',
+        'views/kiosko_action.xml',
+        'views/kiosko_menus.xml',
+        'views/res_config_settings_views.xml',
+    ],
+    'assets': {
+        'web.assets_backend': [
+            'pesaje_kiosko/static/src/css/kiosko.css',
+            'pesaje_kiosko/static/src/app/components/KioskoPesajeCard.js',
+            'pesaje_kiosko/static/src/app/components/KioskoPesajeDetail.js',
+            'pesaje_kiosko/static/src/app/components/KioskoForm.js',
+            'pesaje_kiosko/static/src/app/screens/KioskoLoginScreen.js',
+            'pesaje_kiosko/static/src/app/screens/KioskoWorkScreen.js',
+            'pesaje_kiosko/static/src/app/screens/KioskoDashboardScreen.js',
+            'pesaje_kiosko/static/src/app/KioskoApp.js',
+            'pesaje_kiosko/static/src/app/main.js',
+        ],
+    },
+    'installable': True,
+    'application': True,
+    'license': 'LGPL-3',
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_pesaje_kiosko_root"
+        name="Pesaje Kiosko"
+        sequence="13"/>
+
+    <menuitem id="menu_pesaje_kiosko_app"
+        name="Abrir Kiosko"
+        parent="menu_pesaje_kiosko_root"
+        action="action_pesaje_kiosko"
+        sequence="1"/>
+</odoo>

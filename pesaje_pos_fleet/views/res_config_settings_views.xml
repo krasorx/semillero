@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_pesaje" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.pesaje</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+        <field name="arch" type="xml">
+            <app string="Pesajes" name="pesaje_pos_fleet">
+                <block title="Configuración de Pesajes">
+                    <setting string="Categoría de Productos"
+                             help="Filtra los productos disponibles en la pantalla de pesaje (ej: Granos y Cereales)">
+                        <field name="pesaje_product_category_id"/>
+                    </setting>
+                    <setting string="Validar Stock Automáticamente"
+                             help="Al completar un pesaje genera y valida el movimiento de stock de forma automática">
+                        <field name="pesaje_auto_validate_stock"/>
+                    </setting>
+                </block>
+            </app>
+        </field>
+    </record>
+</odoo>

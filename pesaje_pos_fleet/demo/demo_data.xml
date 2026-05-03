@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+<!-- ═══════════════════════════════════════════════════
+     CATEGORÍA DE PRODUCTOS
+     ═══════════════════════════════════════════════════ -->
+<record id="product_categ_granos" model="product.category">
+    <field name="name">Granos y Cereales</field>
+</record>
+
+<!-- ═══════════════════════════════════════════════════
+     PRODUCTOS DE CARGA (product.product)
+     Nota: crear product.product directamente también crea el product.template
+     ═══════════════════════════════════════════════════ -->
+<record id="product_maiz" model="product.product">
+    <field name="name">Maíz</field>
+    <field name="categ_id" ref="product_categ_granos"/>
+    <field name="uom_id" ref="uom.product_uom_kgm"/>
+    <field name="type">consu</field>
+</record>
+
+<record id="product_soja" model="product.product">
+    <field name="name">Soja</field>
+    <field name="categ_id" ref="product_categ_granos"/>
+    <field name="uom_id" ref="uom.product_uom_kgm"/>
+    <field name="type">consu</field>
+</record>
+
+<!-- Descartes -->
+<record id="product_chala" model="product.product">
+    <field name="name">Chala</field>
+    <field name="categ_id" ref="product_categ_granos"/>
+    <field name="uom_id" ref="uom.product_uom_kgm"/>
+    <field name="type">consu</field>
+</record>
+
+<record id="product_marlo" model="product.product">
+    <field name="name">Marlo</field>
+    <field name="categ_id" ref="product_categ_granos"/>
+    <field name="uom_id" ref="uom.product_uom_kgm"/>
+    <field name="type">consu</field>
+</record>
+
+<!-- ═══════════════════════════════════════════════════
+     OPERADORES POS (con PIN para login en la balanza)
+     ═══════════════════════════════════════════════════ -->
+<record id="employee_operador_1" model="hr.employee">
+    <field name="name">Carlos Rodríguez</field>
+    <field name="job_title">Operador Balanza</field>
+    <field name="pin">1234</field>
+</record>
+
+<record id="employee_operador_2" model="hr.employee">
+    <field name="name">Ana González</field>
+    <field name="job_title">Operadora Balanza</field>
+    <field name="pin">5678</field>
+</record>
+
+<!-- ═══════════════════════════════════════════════════
+     CHOFERES
+     ═══════════════════════════════════════════════════ -->
+<record id="employee_chofer_1" model="hr.employee">
+    <field name="name">Juan Pérez</field>
+    <field name="job_title">Chofer</field>
+    <field name="pin">1111</field>
+</record>
+
+<record id="employee_chofer_2" model="hr.employee">
+    <field name="name">Pedro Martínez</field>
+    <field name="job_title">Chofer</field>
+    <field name="pin">2222</field>
+</record>
+
+<record id="employee_chofer_3" model="hr.employee">
+    <field name="name">Luis Fernández</field>
+    <field name="job_title">Chofer</field>
+    <field name="pin">3333</field>
+</record>
+
+<record id="employee_chofer_4" model="hr.employee">
+    <field name="name">María Sánchez</field>
+    <field name="job_title">Chofer</field>
+    <field name="pin">4444</field>
+</record>
+
+<record id="employee_chofer_5" model="hr.employee">
+    <field name="name">Roberto López</field>
+    <field name="job_title">Chofer</field>
+    <field name="pin">5555</field>
+</record>
+
+<record id="employee_chofer_6" model="hr.employee">
+    <field name="name">Diego Ramírez</field>
+    <field name="job_title">Chofer</field>
+    <field name="pin">6666</field>
+</record>
+
+<!-- ═══════════════════════════════════════════════════
+     MARCA Y MODELO DE CAMIONES
+     ═══════════════════════════════════════════════════ -->
+<record id="fleet_brand_generic" model="fleet.vehicle.model.brand">
+    <field name="name">Genérico</field>
+</record>
+
+<record id="fleet_model_camion" model="fleet.vehicle.model">
+    <field name="name">Camión</field>
+    <field name="brand_id" ref="fleet_brand_generic"/>
+</record>
+
+<!-- ═══════════════════════════════════════════════════
+     CAMIONES (fleet.vehicle)
+     ═══════════════════════════════════════════════════ -->
+<record id="vehicle_abc123" model="fleet.vehicle">
+    <field name="model_id" ref="fleet_model_camion"/>
+    <field name="license_plate">ABC 123</field>
+</record>
+
+<record id="vehicle_def456" model="fleet.vehicle">
+    <field name="model_id" ref="fleet_model_camion"/>
+    <field name="license_plate">DEF 456</field>
+</record>
+
+<record id="vehicle_ghi789" model="fleet.vehicle">
+    <field name="model_id" ref="fleet_model_camion"/>
+    <field name="license_plate">GHI 789</field>
+</record>
+
+<record id="vehicle_jkl012" model="fleet.vehicle">
+    <field name="model_id" ref="fleet_model_camion"/>
+    <field name="license_plate">JKL 012</field>
+</record>
+
+<record id="vehicle_mno345" model="fleet.vehicle">
+    <field name="model_id" ref="fleet_model_camion"/>
+    <field name="license_plate">MNO 345</field>
+</record>
+
+<record id="vehicle_pqr678" model="fleet.vehicle">
+    <field name="model_id" ref="fleet_model_camion"/>
+    <field name="license_plate">PQR 678</field>
+</record>
+
+<record id="vehicle_stu901" model="fleet.vehicle">
+    <field name="model_id" ref="fleet_model_camion"/>
+    <field name="license_plate">STU 901</field>
+</record>
+
+<record id="vehicle_vwx234" model="fleet.vehicle">
+    <field name="model_id" ref="fleet_model_camion"/>
+    <field name="license_plate">VWX 234</field>
+</record>
+
+<record id="vehicle_yza567" model="fleet.vehicle">
+    <field name="model_id" ref="fleet_model_camion"/>
+    <field name="license_plate">YZA 567</field>
+</record>
+
+<record id="vehicle_bcd890" model="fleet.vehicle">
+    <field name="model_id" ref="fleet_model_camion"/>
+    <field name="license_plate">BCD 890</field>
+</record>
+
+<!-- ═══════════════════════════════════════════════════
+     CAMPOS AGRÍCOLAS
+     ═══════════════════════════════════════════════════ -->
+<record id="campo_la_esperanza" model="pesaje.campo">
+    <field name="name">La Esperanza</field>
+    <field name="location">Ruta 8 km 142</field>
+</record>
+
+<record id="campo_san_jose" model="pesaje.campo">
+    <field name="name">San José</field>
+    <field name="location">Ruta 9 km 78</field>
+</record>
+
+<record id="campo_el_porvenir" model="pesaje.campo">
+    <field name="name">El Porvenir</field>
+    <field name="location">Camino vecinal s/n</field>
+</record>
+
+<!-- ═══════════════════════════════════════════════════
+     HÍBRIDOS
+     ═══════════════════════════════════════════════════ -->
+<record id="hibrido_ax880" model="pesaje.hibrido">
+    <field name="name">AX 880</field>
+    <field name="product_id" ref="product_maiz"/>
+</record>
+
+<record id="hibrido_dx77" model="pesaje.hibrido">
+    <field name="name">DX 77</field>
+    <field name="product_id" ref="product_maiz"/>
+</record>
+
+<record id="hibrido_soja_rr" model="pesaje.hibrido">
+    <field name="name">Soja Especial RR</field>
+    <field name="product_id" ref="product_soja"/>
+</record>
+
+<!-- ═══════════════════════════════════════════════════
+     PESAJE 01 — PRECARGADO
+     Camión en origen, aún no salió
+     ═══════════════════════════════════════════════════ -->
+<record id="pesaje_pre_01" model="pesaje.pesaje">
+    <field name="name">WB/2026/0001</field>
+    <field name="state">precargado</field>
+    <field name="vehicle_id" ref="vehicle_yza567"/>
+    <field name="driver_id" ref="employee_chofer_5"/>
+    <field name="product_id" ref="product_soja"/>
+    <field name="campo_id" ref="campo_san_jose"/>
+    <field name="hibrido_id" ref="hibrido_soja_rr"/>
+    <field name="employee_id" ref="employee_operador_1"/>
+    <field name="notes">Pre-carga programada para mañana temprano.</field>
+</record>
+
+<!-- ═══════════════════════════════════════════════════
+     PESAJES 02-03 — EN CAMINO
+     ═══════════════════════════════════════════════════ -->
+<record id="pesaje_camino_01" model="pesaje.pesaje">
+    <field name="name">WB/2026/0002</field>
+    <field name="state">en_camino</field>
+    <field name="vehicle_id" ref="vehicle_abc123"/>
+    <field name="driver_id" ref="employee_chofer_1"/>
+    <field name="product_id" ref="product_maiz"/>
+    <field name="campo_id" ref="campo_la_esperanza"/>
+    <field name="hibrido_id" ref="hibrido_ax880"/>
+    <field name="employee_id" ref="employee_operador_1"/>
+</record>
+
+<record id="pesaje_camino_02" model="pesaje.pesaje">
+    <field name="name">WB/2026/0003</field>
+    <field name="state">en_camino</field>
+    <field name="vehicle_id" ref="vehicle_def456"/>
+    <field name="driver_id" ref="employee_chofer_2"/>
+    <field name="product_id" ref="product_soja"/>
+    <field name="campo_id" ref="campo_el_porvenir"/>
+    <field name="employee_id" ref="employee_operador_2"/>
+</record>
+
+<!-- ═══════════════════════════════════════════════════
+     PESAJES 04-05 — FUERA DE PLANTA
+     ═══════════════════════════════════════════════════ -->
+<record id="pesaje_fuera_01" model="pesaje.pesaje">
+    <field name="name">WB/2026/0004</field>
+    <field name="state">fuera_planta</field>
+    <field name="vehicle_id" ref="vehicle_ghi789"/>
+    <field name="driver_id" ref="employee_chofer_3"/>
+    <field name="product_id" ref="product_maiz"/>
+    <field name="campo_id" ref="campo_la_esperanza"/>
+    <field name="employee_id" ref="employee_operador_1"/>
+</record>
+
+<record id="pesaje_fuera_02" model="pesaje.pesaje">
+    <field name="name">WB/2026/0005</field>
+    <field name="state">fuera_planta</field>
+    <field name="vehicle_id" ref="vehicle_jkl012"/>
+    <field name="driver_id" ref="employee_chofer_4"/>
+    <field name="product_id" ref="product_soja"/>
+    <field name="campo_id" ref="campo_san_jose"/>
+    <field name="employee_id" ref="employee_operador_2"/>
+</record>
+
+<!-- ═══════════════════════════════════════════════════
+     PESAJES 06-09 — EN PLANTA (con distintos subestados)
+     ═══════════════════════════════════════════════════ -->
+
+<!-- Cola — recién ingresó -->
+<record id="pesaje_planta_01" model="pesaje.pesaje">
+    <field name="name">WB/2026/0006</field>
+    <field name="state">en_planta</field>
+    <field name="substate_id" ref="pesaje_pos_fleet.substate_cola"/>
+    <field name="vehicle_id" ref="vehicle_mno345"/>
+    <field name="driver_id" ref="employee_chofer_5"/>
+    <field name="product_id" ref="product_maiz"/>
+    <field name="campo_id" ref="campo_el_porvenir"/>
+    <field name="hibrido_id" ref="hibrido_dx77"/>
+    <field name="entry_datetime">2026-05-01 07:15:00</field>
+    <field name="employee_id" ref="employee_operador_1"/>
+</record>
+
+<!-- En Proceso — ya pesó entrada -->
+<record id="pesaje_planta_02" model="pesaje.pesaje">
+    <field name="name">WB/2026/0007</field>
+    <field name="state">en_planta</field>
+    <field name="substate_id" ref="pesaje_pos_fleet.substate_en_proceso"/>
+    <field name="vehicle_id" ref="vehicle_pqr678"/>
+    <field name="driver_id" ref="employee_chofer_6"/>
+    <field name="product_id" ref="product_soja"/>
+    <field name="campo_id" ref="campo_san_jose"/>
+    <field name="gross_weight">31500.0</field>
+    <field name="entry_datetime">2026-05-01 06:45:00</field>
+    <field name="employee_id" ref="employee_operador_1"/>
+</record>
+
+<!-- Depósito — con tara registrada -->
+<record id="pesaje_planta_03" model="pesaje.pesaje">
+    <field name="name">WB/2026/0008</field>
+    <field name="state">en_planta</field>
+    <field name="substate_id" ref="pesaje_pos_fleet.substate_deposito"/>
+    <field name="vehicle_id" ref="vehicle_stu901"/>
+    <field name="driver_id" ref="employee_chofer_1"/>
+    <field name="product_id" ref="product_maiz"/>
+    <field name="campo_id" ref="campo_la_esperanza"/>
+    <field name="hibrido_id" ref="hibrido_ax880"/>
+    <field name="gross_weight">28800.0</field>
+    <field name="entry_datetime">2026-05-01 05:30:00</field>
+    <field name="employee_id" ref="employee_operador_2"/>
+</record>
+
+<!-- Problema — Chala (descarte) con humedad fuera de parámetro -->
+<record id="pesaje_planta_04" model="pesaje.pesaje">
+    <field name="name">WB/2026/0009</field>
+    <field name="state">en_planta</field>
+    <field name="substate_id" ref="pesaje_pos_fleet.substate_problema"/>
+    <field name="vehicle_id" ref="vehicle_vwx234"/>
+    <field name="driver_id" ref="employee_chofer_2"/>
+    <field name="product_id" ref="product_chala"/>
+    <field name="campo_id" ref="campo_el_porvenir"/>
+    <field name="is_discard">True</field>
+    <field name="gross_weight">15200.0</field>
+    <field name="entry_datetime">2026-05-01 06:00:00</field>
+    <field name="employee_id" ref="employee_operador_2"/>
+    <field name="notes">Humedad fuera de parámetro. En espera de análisis de calidad.</field>
+</record>
+
+<!-- Tara del camión en Depósito -->
+<record id="tara_planta_03" model="pesaje.tara">
+    <field name="pesaje_id" ref="pesaje_planta_03"/>
+    <field name="peso">13200.0</field>
+    <field name="tipo">salida</field>
+    <field name="datetime">2026-05-01 07:55:00</field>
+    <field name="employee_id" ref="employee_operador_2"/>
+</record>
+
+<!-- ═══════════════════════════════════════════════════
+     PESAJES 10-14 — COMPLETADOS
+     ═══════════════════════════════════════════════════ -->
+
+<!-- Maíz AX880 — neto 15.800 kg -->
+<record id="pesaje_comp_01" model="pesaje.pesaje">
+    <field name="name">WB/2026/0010</field>
+    <field name="state">completado</field>
+    <field name="vehicle_id" ref="vehicle_abc123"/>
+    <field name="driver_id" ref="employee_chofer_1"/>
+    <field name="product_id" ref="product_maiz"/>
+    <field name="campo_id" ref="campo_la_esperanza"/>
+    <field name="hibrido_id" ref="hibrido_ax880"/>
+    <field name="gross_weight">29400.0</field>
+    <field name="entry_datetime">2026-05-01 01:00:00</field>
+    <field name="exit_datetime">2026-05-01 02:45:00</field>
+    <field name="employee_id" ref="employee_operador_1"/>
+</record>
+<record id="tara_comp_01" model="pesaje.tara">
+    <field name="pesaje_id" ref="pesaje_comp_01"/>
+    <field name="peso">13600.0</field>
+    <field name="tipo">salida</field>
+    <field name="datetime">2026-05-01 02:30:00</field>
+    <field name="employee_id" ref="employee_operador_1"/>
+</record>
+
+<!-- Soja RR — neto 18.400 kg -->
+<record id="pesaje_comp_02" model="pesaje.pesaje">
+    <field name="name">WB/2026/0011</field>
+    <field name="state">completado</field>
+    <field name="vehicle_id" ref="vehicle_def456"/>
+    <field name="driver_id" ref="employee_chofer_2"/>
+    <field name="product_id" ref="product_soja"/>
+    <field name="campo_id" ref="campo_san_jose"/>
+    <field name="hibrido_id" ref="hibrido_soja_rr"/>
+    <field name="gross_weight">33200.0</field>
+    <field name="entry_datetime">2026-05-01 02:00:00</field>
+    <field name="exit_datetime">2026-05-01 03:50:00</field>
+    <field name="employee_id" ref="employee_operador_2"/>
+</record>
+<record id="tara_comp_02" model="pesaje.tara">
+    <field name="pesaje_id" ref="pesaje_comp_02"/>
+    <field name="peso">14800.0</field>
+    <field name="tipo">salida</field>
+    <field name="datetime">2026-05-01 03:40:00</field>
+    <field name="employee_id" ref="employee_operador_2"/>
+</record>
+
+<!-- Marlo DESCARTE — neto 9.600 kg -->
+<record id="pesaje_comp_03" model="pesaje.pesaje">
+    <field name="name">WB/2026/0012</field>
+    <field name="state">completado</field>
+    <field name="vehicle_id" ref="vehicle_ghi789"/>
+    <field name="driver_id" ref="employee_chofer_3"/>
+    <field name="product_id" ref="product_marlo"/>
+    <field name="campo_id" ref="campo_el_porvenir"/>
+    <field name="is_discard">True</field>
+    <field name="gross_weight">19800.0</field>
+    <field name="entry_datetime">2026-04-30 22:00:00</field>
+    <field name="exit_datetime">2026-04-30 23:20:00</field>
+    <field name="employee_id" ref="employee_operador_1"/>
+    <field name="notes">Marlo con humedad 18%. Descartado por calidad.</field>
+</record>
+<record id="tara_comp_03" model="pesaje.tara">
+    <field name="pesaje_id" ref="pesaje_comp_03"/>
+    <field name="peso">10200.0</field>
+    <field name="tipo">salida</field>
+    <field name="datetime">2026-04-30 23:10:00</field>
+    <field name="employee_id" ref="employee_operador_1"/>
+</record>
+
+<!-- Maíz DX77 — neto 15.900 kg -->
+<record id="pesaje_comp_04" model="pesaje.pesaje">
+    <field name="name">WB/2026/0013</field>
+    <field name="state">completado</field>
+    <field name="vehicle_id" ref="vehicle_jkl012"/>
+    <field name="driver_id" ref="employee_chofer_4"/>
+    <field name="product_id" ref="product_maiz"/>
+    <field name="campo_id" ref="campo_la_esperanza"/>
+    <field name="hibrido_id" ref="hibrido_dx77"/>
+    <field name="gross_weight">27800.0</field>
+    <field name="entry_datetime">2026-04-30 20:30:00</field>
+    <field name="exit_datetime">2026-04-30 22:15:00</field>
+    <field name="employee_id" ref="employee_operador_2"/>
+</record>
+<record id="tara_comp_04" model="pesaje.tara">
+    <field name="pesaje_id" ref="pesaje_comp_04"/>
+    <field name="peso">11900.0</field>
+    <field name="tipo">salida</field>
+    <field name="datetime">2026-04-30 22:05:00</field>
+    <field name="employee_id" ref="employee_operador_2"/>
+</record>
+
+<!-- Chala DESCARTE — doble tara, neto 7.250 kg -->
+<record id="pesaje_comp_05" model="pesaje.pesaje">
+    <field name="name">WB/2026/0014</field>
+    <field name="state">completado</field>
+    <field name="vehicle_id" ref="vehicle_mno345"/>
+    <field name="driver_id" ref="employee_chofer_5"/>
+    <field name="product_id" ref="product_chala"/>
+    <field name="campo_id" ref="campo_san_jose"/>
+    <field name="is_discard">True</field>
+    <field name="gross_weight">16500.0</field>
+    <field name="entry_datetime">2026-04-30 18:00:00</field>
+    <field name="exit_datetime">2026-04-30 19:45:00</field>
+    <field name="employee_id" ref="employee_operador_1"/>
+</record>
+<record id="tara_comp_05a" model="pesaje.tara">
+    <field name="pesaje_id" ref="pesaje_comp_05"/>
+    <field name="peso">9100.0</field>
+    <field name="tipo">entrada</field>
+    <field name="datetime">2026-04-30 18:10:00</field>
+    <field name="employee_id" ref="employee_operador_1"/>
+</record>
+<record id="tara_comp_05b" model="pesaje.tara">
+    <field name="pesaje_id" ref="pesaje_comp_05"/>
+    <field name="peso">9250.0</field>
+    <field name="tipo">salida</field>
+    <field name="datetime">2026-04-30 19:35:00</field>
+    <field name="employee_id" ref="employee_operador_1"/>
+</record>
+
+<!-- ═══════════════════════════════════════════════════
+     PESAJE 15 — CANCELADO
+     ═══════════════════════════════════════════════════ -->
+<record id="pesaje_cancel_01" model="pesaje.pesaje">
+    <field name="name">WB/2026/0015</field>
+    <field name="state">cancelado</field>
+    <field name="vehicle_id" ref="vehicle_bcd890"/>
+    <field name="driver_id" ref="employee_chofer_6"/>
+    <field name="product_id" ref="product_maiz"/>
+    <field name="campo_id" ref="campo_el_porvenir"/>
+    <field name="employee_id" ref="employee_operador_2"/>
+    <field name="cancel_reason">Camión con desperfecto mecánico. Regresó a origen sin descargar.</field>
+</record>
+
+</data>
+</odoo>

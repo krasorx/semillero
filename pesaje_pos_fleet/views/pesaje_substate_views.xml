@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pesaje_substate_list" model="ir.ui.view">
+        <field name="name">pesaje.substate.list</field>
+        <field name="model">pesaje.substate</field>
+        <field name="arch" type="xml">
+            <list string="Subestados" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+                <field name="is_problem"/>
+                <field name="fold"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_pesaje_substate_form" model="ir.ui.view">
+        <field name="name">pesaje.substate.form</field>
+        <field name="model">pesaje.substate</field>
+        <field name="arch" type="xml">
+            <form string="Subestado">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="sequence"/>
+                        <field name="color" widget="color_picker"/>
+                        <field name="is_problem"/>
+                        <field name="fold"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_pesaje_substate" model="ir.actions.act_window">
+        <field name="name">Subestados</field>
+        <field name="res_model">pesaje.substate</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

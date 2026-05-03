@@ -1,0 +1,6 @@
+/* Estilos base para la interfaz POS de pesaje */
+.o_pesaje_pos_screen {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
