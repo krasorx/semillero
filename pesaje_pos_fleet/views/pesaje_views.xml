@@ -39,10 +39,12 @@
                         <h1><field name="name" readonly="1"/></h1>
                     </div>
                     <group>
-                        <group string="Vehículo">
+                        <group string="Vehículo y Transporte">
                             <field name="vehicle_id"/>
                             <field name="driver_id"/>
+                            <field name="transport_company_id"/>
                             <field name="employee_id"/>
+                            <field name="balanza_id"/>
                         </group>
                         <group string="Estado">
                             <field name="substate_id" invisible="state != 'en_planta'"/>
@@ -56,6 +58,7 @@
                             <field name="product_id"/>
                             <field name="lot_id"/>
                             <field name="campo_id"/>
+                            <field name="parcela"/>
                             <field name="hibrido_id"/>
                             <field name="is_discard"/>
                         </group>

@@ -11,3 +11,5 @@ access_pesaje_hibrido_user,pesaje.hibrido user,model_pesaje_hibrido,base.group_u
 access_pesaje_hibrido_manager,pesaje.hibrido manager,model_pesaje_hibrido,base.group_system,1,1,1,1
 access_pesaje_cancelar,pesaje.cancelar,model_pesaje_cancelar,base.group_user,1,1,1,1
 access_pesaje_report_wizard,pesaje.report.wizard,model_pesaje_report_wizard,base.group_user,1,1,1,1
+access_pesaje_balanza_user,pesaje.balanza user,model_pesaje_balanza,base.group_user,1,0,0,0
+access_pesaje_balanza_manager,pesaje.balanza manager,model_pesaje_balanza,base.group_system,1,1,1,1

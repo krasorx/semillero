@@ -112,6 +112,25 @@ export class PesajeAPI {
         return await this._call('/pesaje/cancel', params);
     }
 
+    async uploadAttachment(pesajeId, file) {
+        const data = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = e => resolve(e.target.result.split(',')[1]);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+        return await this._call('/pesaje/upload', {
+            pesaje_id: pesajeId,
+            filename: file.name,
+            data,
+            mimetype: file.type || 'application/octet-stream',
+        });
+    }
+
+    async loadHistory(filters = {}) {
+        return await this._call('/pesaje/history', filters);
+    }
+
     async _flushQueue() {
         if (this._syncRunning) return;
         this._syncRunning = true;

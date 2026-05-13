@@ -15,6 +15,7 @@
         'wizards/pesaje_cancelar_views.xml',
         'wizards/report_pesaje_wizard_views.xml',
         # 'views/res_config_settings_views.xml',  # TODO: ajustar a sintaxis Odoo 19
+        'views/pesaje_balanza_views.xml',
         'views/pesaje_pos_action.xml',
         'views/menus.xml',
         'report/pesaje_report_actions.xml',

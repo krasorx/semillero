@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pesaje_balanza_list" model="ir.ui.view">
+        <field name="name">pesaje.balanza.list</field>
+        <field name="model">pesaje.balanza</field>
+        <field name="arch" type="xml">
+            <list string="Balanzas">
+                <field name="name"/>
+                <field name="notes"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_pesaje_balanza_form" model="ir.ui.view">
+        <field name="name">pesaje.balanza.form</field>
+        <field name="model">pesaje.balanza</field>
+        <field name="arch" type="xml">
+            <form string="Balanza">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="notes"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_pesaje_balanza" model="ir.actions.act_window">
+        <field name="name">Balanzas</field>
+        <field name="res_model">pesaje.balanza</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -15,6 +15,8 @@
         'web.assets_backend': [
             'pesaje_kiosko/static/src/css/kiosko.css',
             'pesaje_kiosko/static/src/app/components/KioskoPesajeCard.js',
+            'pesaje_kiosko/static/src/app/components/KioskoDocumentosTab.js',
+            'pesaje_kiosko/static/src/app/components/KioskoHistoricoTab.js',
             'pesaje_kiosko/static/src/app/components/KioskoPesajeDetail.js',
             'pesaje_kiosko/static/src/app/components/KioskoForm.js',
             'pesaje_kiosko/static/src/app/screens/KioskoLoginScreen.js',

@@ -22,6 +22,16 @@ export class KioskoForm extends Component {
                 </div>
 
                 <div class="kiosko-field">
+                    <label class="kiosko-label">Empresa Transportista</label>
+                    <select class="kiosko-select" t-model="state.transport_company_id">
+                        <option value="">— Sin asignar —</option>
+                        <t t-foreach="props.masters ? props.masters.partners || [] : []" t-as="p" t-key="p.id">
+                            <option t-att-value="p.id" t-esc="p.name"/>
+                        </t>
+                    </select>
+                </div>
+
+                <div class="kiosko-field">
                     <label class="kiosko-label">Conductor</label>
                     <select class="kiosko-select" t-model="state.driver_id">
                         <option value="">— Sin asignar —</option>
@@ -63,21 +73,28 @@ export class KioskoForm extends Component {
                         </select>
                     </div>
                     <div class="kiosko-field">
-                        <label class="kiosko-label">Híbrido</label>
-                        <select class="kiosko-select" t-model="state.hibrido_id">
-                            <option value="">—</option>
-                            <t t-foreach="props.masters ? props.masters.hibridos : []" t-as="h" t-key="h.id">
-                                <option t-att-value="h.id" t-esc="h.name"/>
-                            </t>
-                        </select>
+                        <label class="kiosko-label">Parcela</label>
+                        <input class="kiosko-input" type="text"
+                            placeholder="Ej: Lote 3"
+                            t-model="state.parcela"/>
                     </div>
                 </div>
 
                 <div class="kiosko-field">
-                    <label class="kiosko-label">Notas</label>
+                    <label class="kiosko-label">Híbrido</label>
+                    <select class="kiosko-select" t-model="state.hibrido_id">
+                        <option value="">—</option>
+                        <t t-foreach="props.masters ? props.masters.hibridos : []" t-as="h" t-key="h.id">
+                            <option t-att-value="h.id" t-esc="h.name"/>
+                        </t>
+                    </select>
+                </div>
+
+                <div class="kiosko-field">
+                    <label class="kiosko-label">Observaciones</label>
                     <textarea class="kiosko-textarea" rows="2"
                         t-model="state.notes"
-                        placeholder="Observaciones..."/>
+                        placeholder="Observaciones sobre el material..."/>
                 </div>
 
                 <div class="kiosko-field-inline">
@@ -116,14 +133,16 @@ export class KioskoForm extends Component {
     setup() {
         const p = this.props.pesaje;
         this.state = useState({
-            vehicle_id: p ? String(p.vehicle_id || '') : '',
-            driver_id:  p ? String(p.driver_id  || '') : '',
-            product_id: p ? String(p.product_id || '') : '',
-            lot_id:     p ? String(p.lot_id     || '') : '',
-            campo_id:   p ? String(p.campo_id   || '') : '',
-            hibrido_id: p ? String(p.hibrido_id || '') : '',
-            notes:      p ? (p.notes || '') : '',
-            is_discard: p ? (p.is_discard || false) : false,
+            vehicle_id:           p ? String(p.vehicle_id || '') : '',
+            transport_company_id: p ? String(p.transport_company_id || '') : '',
+            driver_id:            p ? String(p.driver_id  || '') : '',
+            product_id:           p ? String(p.product_id || '') : '',
+            lot_id:               p ? String(p.lot_id     || '') : '',
+            campo_id:             p ? String(p.campo_id   || '') : '',
+            parcela:              p ? (p.parcela || '') : '',
+            hibrido_id:           p ? String(p.hibrido_id || '') : '',
+            notes:                p ? (p.notes || '') : '',
+            is_discard:           p ? (p.is_discard || false) : false,
             saving: false,
             error: '',
         });
@@ -138,15 +157,17 @@ export class KioskoForm extends Component {
         this.state.error = '';
         try {
             const data = {
-                vehicle_id:  parseInt(this.state.vehicle_id),
-                driver_id:   this.state.driver_id  ? parseInt(this.state.driver_id)  : false,
-                product_id:  this.state.product_id ? parseInt(this.state.product_id) : false,
-                lot_id:      this.state.lot_id     ? parseInt(this.state.lot_id)     : false,
-                campo_id:    this.state.campo_id   ? parseInt(this.state.campo_id)   : false,
-                hibrido_id:  this.state.hibrido_id ? parseInt(this.state.hibrido_id) : false,
-                notes:       this.state.notes || '',
-                is_discard:  this.state.is_discard,
-                employee_id: this.props.employee.id,
+                vehicle_id:           parseInt(this.state.vehicle_id),
+                transport_company_id: this.state.transport_company_id ? parseInt(this.state.transport_company_id) : false,
+                driver_id:            this.state.driver_id   ? parseInt(this.state.driver_id)   : false,
+                product_id:           this.state.product_id  ? parseInt(this.state.product_id)  : false,
+                lot_id:               this.state.lot_id      ? parseInt(this.state.lot_id)      : false,
+                campo_id:             this.state.campo_id    ? parseInt(this.state.campo_id)    : false,
+                parcela:              this.state.parcela || '',
+                hibrido_id:           this.state.hibrido_id  ? parseInt(this.state.hibrido_id)  : false,
+                notes:                this.state.notes || '',
+                is_discard:           this.state.is_discard,
+                employee_id:          this.props.employee.id,
             };
             let result;
             if (this.props.pesaje) {

@@ -11,3 +11,9 @@ class ResConfigSettings(models.TransientModel):
              'Si no se configura, aparecen todos los empleados activos.',
         config_parameter='pesaje_kiosko.employee_category_id',
     )
+
+    pesaje_kiosko_balanza_id = fields.Many2one(
+        'pesaje.balanza',
+        string='Balanza de este kiosko',
+        config_parameter='pesaje_kiosko.balanza_id',
+    )

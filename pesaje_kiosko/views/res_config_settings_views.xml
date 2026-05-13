@@ -13,6 +13,12 @@
                             <field name="pesaje_kiosko_employee_category_id"/>
                         </setting>
                     </block>
+                    <block title="Balanza">
+                        <setting string="Balanza de este Kiosko"
+                            help="Balanza física asignada a este kiosko. Se asigna automáticamente al crear un pesaje desde esta terminal.">
+                            <field name="pesaje_kiosko_balanza_id"/>
+                        </setting>
+                    </block>
                 </app>
             </xpath>
         </field>

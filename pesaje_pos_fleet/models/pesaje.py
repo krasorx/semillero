@@ -53,6 +53,18 @@ class Pesaje(models.Model):
     picking_id = fields.Many2one('stock.picking', 'Movimiento de Stock', readonly=True, copy=False)
     move_failed = fields.Boolean('Fallo de Movimiento', default=False)
 
+    # Transporte
+    transport_company_id = fields.Many2one(
+        'res.partner',
+        'Empresa Transportista',
+        domain=[('is_company', '=', True)],
+        tracking=True,
+    )
+    parcela = fields.Char('Parcela', tracking=True)
+
+    # Balanza
+    balanza_id = fields.Many2one('pesaje.balanza', 'Balanza', tracking=True)
+
     # Misc
     notes = fields.Text('Observaciones')
     attachment_ids = fields.Many2many('ir.attachment', string='Adjuntos')

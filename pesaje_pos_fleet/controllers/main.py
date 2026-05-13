@@ -24,6 +24,8 @@ class PesajeController(http.Controller):
         campos = env['pesaje.campo'].sudo().search([('active', '=', True)])
         hibridos = env['pesaje.hibrido'].sudo().search([('active', '=', True)])
         substates = env['pesaje.substate'].sudo().search([('active', '=', True)], order='sequence')
+        partners = env['res.partner'].sudo().search([('is_company', '=', True), ('active', '=', True)], order='name')
+        balanzas = env['pesaje.balanza'].sudo().search([('active', '=', True)], order='name')
 
         return {
             'vehicles': [{'id': v.id, 'name': v.display_name, 'license_plate': v.license_plate or ''} for v in vehicles],
@@ -33,6 +35,8 @@ class PesajeController(http.Controller):
             'campos': [{'id': c.id, 'name': c.name, 'location': c.location or ''} for c in campos],
             'hibridos': [{'id': h.id, 'name': h.name, 'product_id': h.product_id.id if h.product_id else None} for h in hibridos],
             'substates': [{'id': s.id, 'name': s.name, 'color': s.color, 'is_problem': s.is_problem, 'sequence': s.sequence} for s in substates],
+            'partners': [{'id': p.id, 'name': p.name} for p in partners],
+            'balanzas': [{'id': b.id, 'name': b.name} for b in balanzas],
         }
 
     @http.route('/pesaje/pesajes', type='json', auth='user', methods=['POST'])
@@ -46,7 +50,8 @@ class PesajeController(http.Controller):
     @http.route('/pesaje/create', type='json', auth='user', methods=['POST'], csrf=False)
     def create_pesaje(self, **vals):
         allowed = ['vehicle_id', 'driver_id', 'product_id', 'lot_id', 'campo_id', 'hibrido_id',
-                   'is_discard', 'notes', 'employee_id', 'state']
+                   'is_discard', 'notes', 'employee_id', 'state',
+                   'transport_company_id', 'parcela', 'balanza_id']
         data = {k: v for k, v in vals.items() if k in allowed and v}
         pesaje = request.env['pesaje.pesaje'].sudo().create(data)
         return {'success': True, 'pesaje': self._pesaje_to_dict(pesaje)}
@@ -57,7 +62,8 @@ class PesajeController(http.Controller):
         if not pesaje.exists():
             return {'success': False, 'error': 'Pesaje no encontrado'}
         allowed = ['vehicle_id', 'driver_id', 'product_id', 'lot_id', 'campo_id', 'hibrido_id',
-                   'is_discard', 'notes', 'substate_id']
+                   'is_discard', 'notes', 'substate_id',
+                   'transport_company_id', 'parcela', 'balanza_id']
         data = {k: v for k, v in vals.items() if k in allowed}
         pesaje.write(data)
         return {'success': True, 'pesaje': self._pesaje_to_dict(pesaje)}
@@ -152,6 +158,42 @@ class PesajeController(http.Controller):
             'fuera_planta': [self._pesaje_to_dict(p) for p in fuera_list],
         }
 
+    @http.route('/pesaje/upload', type='json', auth='user', methods=['POST'], csrf=False)
+    def upload_attachment(self, pesaje_id, filename, data, mimetype='application/octet-stream', **kw):
+        """Recibe archivo en base64 y lo adjunta al pesaje como ir.attachment."""
+        pesaje = request.env['pesaje.pesaje'].sudo().browse(int(pesaje_id))
+        if not pesaje.exists():
+            return {'success': False, 'error': 'Pesaje no encontrado'}
+        attachment = request.env['ir.attachment'].sudo().create({
+            'name': filename,
+            'datas': data,
+            'res_model': 'pesaje.pesaje',
+            'res_id': pesaje.id,
+            'mimetype': mimetype,
+        })
+        return {
+            'success': True,
+            'attachment': {'id': attachment.id, 'name': attachment.name, 'mimetype': attachment.mimetype},
+        }
+
+    @http.route('/pesaje/history', type='json', auth='user', methods=['POST'])
+    def get_history(self, balanza_id=None, date_from=None, date_to=None, state=None, limit=50, **kw):
+        """Retorna pesajes completados/cancelados con filtros opcionales."""
+        domain = [('state', 'in', ['completado', 'cancelado'])]
+        if balanza_id:
+            domain.append(('balanza_id', '=', int(balanza_id)))
+        if date_from:
+            domain.append(('exit_datetime', '>=', date_from + ' 00:00:00'))
+        if date_to:
+            domain.append(('exit_datetime', '<=', date_to + ' 23:59:59'))
+        if state:
+            domain = [d for d in domain if not (isinstance(d, list) and d[0] == 'state')]
+            domain.append(('state', '=', state))
+        pesajes = request.env['pesaje.pesaje'].sudo().search(
+            domain, order='exit_datetime desc', limit=int(limit)
+        )
+        return {'pesajes': [self._pesaje_to_dict(p) for p in pesajes]}
+
     def _pesaje_to_dict(self, p):
         return {
             'id': p.id,
@@ -165,12 +207,17 @@ class PesajeController(http.Controller):
             'license_plate': p.vehicle_id.license_plate if p.vehicle_id else '',
             'driver_id': p.driver_id.id if p.driver_id else None,
             'driver_name': p.driver_id.name if p.driver_id else '',
+            'transport_company_id': p.transport_company_id.id if p.transport_company_id else None,
+            'transport_company_name': p.transport_company_id.name if p.transport_company_id else '',
+            'balanza_id': p.balanza_id.id if p.balanza_id else None,
+            'balanza_name': p.balanza_id.name if p.balanza_id else '',
             'product_id': p.product_id.id if p.product_id else None,
             'product_name': p.product_id.display_name if p.product_id else '',
             'lot_id': p.lot_id.id if p.lot_id else None,
             'lot_name': p.lot_id.name if p.lot_id else '',
             'campo_id': p.campo_id.id if p.campo_id else None,
             'campo_name': p.campo_id.name if p.campo_id else '',
+            'parcela': p.parcela or '',
             'hibrido_id': p.hibrido_id.id if p.hibrido_id else None,
             'hibrido_name': p.hibrido_id.name if p.hibrido_id else '',
             'is_discard': p.is_discard,
@@ -185,5 +232,13 @@ class PesajeController(http.Controller):
             'notes': p.notes or '',
             'move_failed': p.move_failed,
             'picking_id': p.picking_id.id if p.picking_id else None,
-            'tara_ids': [{'id': t.id, 'peso': t.peso, 'tipo': t.tipo, 'datetime': t.datetime.isoformat() if t.datetime else None} for t in p.tara_ids],
+            'tara_ids': [
+                {'id': t.id, 'peso': t.peso, 'tipo': t.tipo,
+                 'datetime': t.datetime.isoformat() if t.datetime else None}
+                for t in p.tara_ids
+            ],
+            'attachment_ids': [
+                {'id': a.id, 'name': a.name, 'mimetype': a.mimetype or 'application/octet-stream'}
+                for a in p.attachment_ids
+            ],
         }
