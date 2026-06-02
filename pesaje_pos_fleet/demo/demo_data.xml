@@ -468,5 +468,148 @@
     <field name="cancel_reason">Camión con desperfecto mecánico. Regresó a origen sin descargar.</field>
 </record>
 
+<!-- ═══════════════════════════════════════════════════
+     BOLSAS DE SEMILLA DE MAÍZ (producto final para despacho)
+     Productos almacenables trazados por lote, en unidades (bolsas).
+     Sirven para vender → entrega → pesaje de despacho.
+     ═══════════════════════════════════════════════════ -->
+<record id="product_categ_semillas" model="product.category">
+    <field name="name">Semillas Embolsadas</field>
+</record>
+
+<!-- Híbridos de maíz adicionales (AX 880 y DX 77 ya existen) -->
+<record id="hibrido_kw200" model="pesaje.hibrido">
+    <field name="name">KW 200</field>
+    <field name="product_id" ref="product_maiz"/>
+</record>
+<record id="hibrido_sy540" model="pesaje.hibrido">
+    <field name="name">SY 540</field>
+    <field name="product_id" ref="product_maiz"/>
+</record>
+
+<!-- Producto: Bolsa Semilla Maíz AX 880 -->
+<record id="bolsa_maiz_ax880" model="product.product">
+    <field name="name">Bolsa Semilla Maíz AX 880 (25kg)</field>
+    <field name="categ_id" ref="product_categ_semillas"/>
+    <field name="uom_id" ref="uom.product_uom_unit"/>
+    <field name="type">consu</field>
+    <field name="is_storable">True</field>
+    <field name="tracking">lot</field>
+</record>
+
+<!-- Producto: Bolsa Semilla Maíz DX 77 -->
+<record id="bolsa_maiz_dx77" model="product.product">
+    <field name="name">Bolsa Semilla Maíz DX 77 (25kg)</field>
+    <field name="categ_id" ref="product_categ_semillas"/>
+    <field name="uom_id" ref="uom.product_uom_unit"/>
+    <field name="type">consu</field>
+    <field name="is_storable">True</field>
+    <field name="tracking">lot</field>
+</record>
+
+<!-- Producto: Bolsa Semilla Maíz KW 200 -->
+<record id="bolsa_maiz_kw200" model="product.product">
+    <field name="name">Bolsa Semilla Maíz KW 200 (25kg)</field>
+    <field name="categ_id" ref="product_categ_semillas"/>
+    <field name="uom_id" ref="uom.product_uom_unit"/>
+    <field name="type">consu</field>
+    <field name="is_storable">True</field>
+    <field name="tracking">lot</field>
+</record>
+
+<!-- Producto: Bolsa Semilla Maíz SY 540 -->
+<record id="bolsa_maiz_sy540" model="product.product">
+    <field name="name">Bolsa Semilla Maíz SY 540 (25kg)</field>
+    <field name="categ_id" ref="product_categ_semillas"/>
+    <field name="uom_id" ref="uom.product_uom_unit"/>
+    <field name="type">consu</field>
+    <field name="is_storable">True</field>
+    <field name="tracking">lot</field>
+</record>
+
+<!-- ─────────────  LOTES (varios por híbrido)  ───────────── -->
+<record id="lot_ax880_001" model="stock.lot">
+    <field name="name">L-AX880-2026-001</field>
+    <field name="product_id" ref="bolsa_maiz_ax880"/>
+</record>
+<record id="lot_ax880_002" model="stock.lot">
+    <field name="name">L-AX880-2026-002</field>
+    <field name="product_id" ref="bolsa_maiz_ax880"/>
+</record>
+<record id="lot_dx77_001" model="stock.lot">
+    <field name="name">L-DX77-2026-001</field>
+    <field name="product_id" ref="bolsa_maiz_dx77"/>
+</record>
+<record id="lot_dx77_002" model="stock.lot">
+    <field name="name">L-DX77-2026-002</field>
+    <field name="product_id" ref="bolsa_maiz_dx77"/>
+</record>
+<record id="lot_kw200_001" model="stock.lot">
+    <field name="name">L-KW200-2026-001</field>
+    <field name="product_id" ref="bolsa_maiz_kw200"/>
+</record>
+<record id="lot_kw200_002" model="stock.lot">
+    <field name="name">L-KW200-2026-002</field>
+    <field name="product_id" ref="bolsa_maiz_kw200"/>
+</record>
+<record id="lot_sy540_001" model="stock.lot">
+    <field name="name">L-SY540-2026-001</field>
+    <field name="product_id" ref="bolsa_maiz_sy540"/>
+</record>
+<record id="lot_sy540_002" model="stock.lot">
+    <field name="name">L-SY540-2026-002</field>
+    <field name="product_id" ref="bolsa_maiz_sy540"/>
+</record>
+
+<!-- ─────────  STOCK INICIAL (quants por lote en Stock)  ───────── -->
+<record id="quant_ax880_001" model="stock.quant">
+    <field name="product_id" ref="bolsa_maiz_ax880"/>
+    <field name="location_id" ref="stock.stock_location_stock"/>
+    <field name="lot_id" ref="lot_ax880_001"/>
+    <field name="quantity">500</field>
+</record>
+<record id="quant_ax880_002" model="stock.quant">
+    <field name="product_id" ref="bolsa_maiz_ax880"/>
+    <field name="location_id" ref="stock.stock_location_stock"/>
+    <field name="lot_id" ref="lot_ax880_002"/>
+    <field name="quantity">320</field>
+</record>
+<record id="quant_dx77_001" model="stock.quant">
+    <field name="product_id" ref="bolsa_maiz_dx77"/>
+    <field name="location_id" ref="stock.stock_location_stock"/>
+    <field name="lot_id" ref="lot_dx77_001"/>
+    <field name="quantity">450</field>
+</record>
+<record id="quant_dx77_002" model="stock.quant">
+    <field name="product_id" ref="bolsa_maiz_dx77"/>
+    <field name="location_id" ref="stock.stock_location_stock"/>
+    <field name="lot_id" ref="lot_dx77_002"/>
+    <field name="quantity">280</field>
+</record>
+<record id="quant_kw200_001" model="stock.quant">
+    <field name="product_id" ref="bolsa_maiz_kw200"/>
+    <field name="location_id" ref="stock.stock_location_stock"/>
+    <field name="lot_id" ref="lot_kw200_001"/>
+    <field name="quantity">600</field>
+</record>
+<record id="quant_kw200_002" model="stock.quant">
+    <field name="product_id" ref="bolsa_maiz_kw200"/>
+    <field name="location_id" ref="stock.stock_location_stock"/>
+    <field name="lot_id" ref="lot_kw200_002"/>
+    <field name="quantity">150</field>
+</record>
+<record id="quant_sy540_001" model="stock.quant">
+    <field name="product_id" ref="bolsa_maiz_sy540"/>
+    <field name="location_id" ref="stock.stock_location_stock"/>
+    <field name="lot_id" ref="lot_sy540_001"/>
+    <field name="quantity">400</field>
+</record>
+<record id="quant_sy540_002" model="stock.quant">
+    <field name="product_id" ref="bolsa_maiz_sy540"/>
+    <field name="location_id" ref="stock.stock_location_stock"/>
+    <field name="lot_id" ref="lot_sy540_002"/>
+    <field name="quantity">210</field>
+</record>
+
 </data>
 </odoo>
