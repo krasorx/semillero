@@ -61,6 +61,8 @@ class PesajeController(http.Controller):
         pesaje = request.env['pesaje.pesaje'].sudo().browse(int(pesaje_id))
         if not pesaje.exists():
             return {'success': False, 'error': 'Pesaje no encontrado'}
+        if pesaje.state in ('completado', 'cancelado'):
+            return {'success': False, 'error': 'El pesaje está finalizado y no puede editarse'}
         allowed = ['vehicle_id', 'driver_id', 'product_id', 'lot_id', 'campo_id', 'hibrido_id',
                    'is_discard', 'notes', 'substate_id',
                    'transport_company_id', 'parcela', 'balanza_id']
@@ -73,6 +75,8 @@ class PesajeController(http.Controller):
         pesaje = request.env['pesaje.pesaje'].sudo().browse(int(pesaje_id))
         if not pesaje.exists():
             return {'success': False, 'error': 'Pesaje no encontrado'}
+        if pesaje.state in ('completado', 'cancelado'):
+            return {'success': False, 'error': 'El pesaje está finalizado y no admite pesajes'}
         weight = float(weight)
         if tipo == 'entrada':
             pesaje.gross_weight = weight
@@ -84,8 +88,6 @@ class PesajeController(http.Controller):
                 'employee_id': int(employee_id) if employee_id else False,
                 'datetime': fields.Datetime.now(),
             })
-        # Completado implícito: al tener bruto y tara, se cierra el pesaje.
-        pesaje._autocomplete_if_ready()
         return {'success': True, 'pesaje': self._pesaje_to_dict(pesaje)}
 
     @http.route('/pesaje/state', type='json', auth='user', methods=['POST'], csrf=False)

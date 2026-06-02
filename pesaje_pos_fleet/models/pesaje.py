@@ -119,13 +119,17 @@ class Pesaje(models.Model):
         if self.state not in ('en_planta',):
             raise UserError(_('Solo se puede completar un pesaje en estado "En Planta".'))
         if not self.gross_weight:
-            raise UserError(_('Debe registrar el peso bruto antes de completar.'))
+            raise UserError(_('Debe registrar el peso de entrada antes de completar.'))
         if not self.tara_weight:
-            raise UserError(_('Debe registrar la tara antes de completar.'))
-        self.write({
+            raise UserError(_('Debe registrar el peso de salida antes de completar.'))
+        terminado = self.env.ref('pesaje_pos_fleet.substate_terminado', raise_if_not_found=False)
+        vals = {
             'state': 'completado',
             'exit_datetime': fields.Datetime.now(),
-        })
+        }
+        if terminado:
+            vals['substate_id'] = terminado.id
+        self.write(vals)
         self._create_stock_move()
 
     def action_cancel(self):
@@ -150,14 +154,6 @@ class Pesaje(models.Model):
                 'employee_id': self.employee_id.id,
                 'datetime': fields.Datetime.now(),
             })
-
-    def _autocomplete_if_ready(self):
-        """Completa el pesaje automáticamente cuando, estando en planta, ya tiene
-        registrados el peso bruto (entrada) y la tara (salida). Permite que el
-        completado sea implícito tras los dos pesajes, sin botón manual."""
-        for rec in self:
-            if rec.state == 'en_planta' and rec.gross_weight and rec.tara_weight:
-                rec.action_complete()
 
     def _create_stock_move(self):
         self.ensure_one()

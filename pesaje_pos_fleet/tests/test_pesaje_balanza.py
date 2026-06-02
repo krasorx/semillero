@@ -96,17 +96,13 @@ class TestPesajeCompletar(TransactionCase):
         self.assertEqual(pesaje.state, 'completado')
         self.assertEqual(pesaje.net_weight, 12000.0)
 
-    def test_autocomplete_solo_con_bruto_no_completa(self):
-        """Con solo peso bruto (sin tara) el autocompletado no dispara."""
-        pesaje = self._pesaje_en_planta(gross_weight=15000.0)
-        pesaje._autocomplete_if_ready()
-        self.assertEqual(pesaje.state, 'en_planta')
-
-    def test_autocomplete_con_bruto_y_tara_completa(self):
-        """Al tener bruto y tara, el autocompletado marca completado."""
+    def test_completar_fija_subestado_terminado(self):
+        """Al completar, el subestado pasa a 'Terminado'."""
         pesaje = self._pesaje_en_planta(gross_weight=15000.0)
         self.env['pesaje.tara'].create({
             'pesaje_id': pesaje.id, 'peso': 3000.0, 'tipo': 'salida',
         })
-        pesaje._autocomplete_if_ready()
+        pesaje.action_complete()
+        terminado = self.env.ref('pesaje_pos_fleet.substate_terminado')
         self.assertEqual(pesaje.state, 'completado')
+        self.assertEqual(pesaje.substate_id, terminado)
