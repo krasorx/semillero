@@ -5,10 +5,10 @@ import { KioskoPesajeDetail } from "../components/KioskoPesajeDetail";
 import { KioskoForm } from "../components/KioskoForm";
 
 const STATE_TABS = [
-    { key: 'precargado',   label: 'Precargado',      icon: '&#x1F4CB;' },
-    { key: 'en_camino',    label: 'En Camino',        icon: '&#x1F69B;' },
-    { key: 'fuera_planta', label: 'Fuera de Planta',  icon: '&#x1F17F;' },
-    { key: 'en_planta',    label: 'En Planta',        icon: '&#x1F3ED;' },
+    { key: 'precargado',   label: 'Precargado',      icon: '📋' },
+    { key: 'en_camino',    label: 'En Camino',        icon: '🚛' },
+    { key: 'fuera_planta', label: 'Fuera de Planta',  icon: '🅿️' },
+    { key: 'en_planta',    label: 'En Planta',        icon: '🏭' },
 ];
 
 export class KioskoWorkScreen extends Component {
@@ -23,7 +23,7 @@ export class KioskoWorkScreen extends Component {
                 <div class="kiosko-header-center">
                     <t t-foreach="stateTabs" t-as="tab" t-key="tab.key">
                         <button
-                            t-attf-class="kiosko-state-tab {{ state.activeTab === tab.key ? 'active' : '' }}"
+                            t-attf-class="kiosko-state-tab state-{{ tab.key }} {{ state.activeTab === tab.key ? 'active' : '' }}"
                             t-on-click="() => this.setTab(tab.key)">
                             <span t-out="tab.icon"/>
                             <span class="kiosko-tab-label" t-esc="tab.label"/>
