@@ -149,8 +149,12 @@ class Pesaje(models.Model):
             if rec.state != expected:
                 raise UserError(_('Operación no válida en el estado actual: %s') % rec.state)
 
-    def action_register_weight(self, weight, tipo='entrada'):
+    def register_weighing(self, weight, tipo='entrada', employee_id=False):
+        """Registra un pesado (entrada = peso bruto, salida = tara) y lo deja
+        asentado en el chatter indicando el operador que lo realizó."""
         self.ensure_one()
+        weight = float(weight)
+        employee = self.env['hr.employee'].browse(int(employee_id)) if employee_id else self.employee_id
         if tipo == 'entrada':
             self.gross_weight = weight
         else:
@@ -158,9 +162,20 @@ class Pesaje(models.Model):
                 'pesaje_id': self.id,
                 'peso': weight,
                 'tipo': tipo,
-                'employee_id': self.employee_id.id,
+                'employee_id': employee.id or False,
                 'datetime': fields.Datetime.now(),
             })
+        tipo_label = dict(self.env['pesaje.tara']._fields['tipo'].selection).get(tipo, tipo)
+        self.message_post(body=_(
+            'Pesado registrado — %(tipo)s: %(peso)s kg · Operador: %(operador)s',
+            tipo=tipo_label,
+            peso='%.2f' % weight,
+            operador=employee.name or _('Desconocido'),
+        ))
+
+    def action_register_weight(self, weight, tipo='entrada'):
+        self.ensure_one()
+        self.register_weighing(weight, tipo, self.employee_id.id)
 
     def _create_stock_move(self):
         self.ensure_one()

@@ -106,3 +106,36 @@ class TestPesajeCompletar(TransactionCase):
         terminado = self.env.ref('pesaje_pos_fleet.substate_terminado')
         self.assertEqual(pesaje.state, 'completado')
         self.assertEqual(pesaje.substate_id, terminado)
+
+
+class TestPesajeChatter(TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        self.vehicle = self.env['fleet.vehicle'].create({
+            'model_id': self.env['fleet.vehicle.model'].create({
+                'name': 'TestModel',
+                'brand_id': self.env['fleet.vehicle.model.brand'].create({'name': 'TestBrand'}).id,
+            }).id,
+            'license_plate': 'CHAT001',
+        })
+        self.operador = self.env['hr.employee'].create({'name': 'Operador Test'})
+
+    def test_pesado_entrada_registra_chatter_con_operador(self):
+        """Registrar entrada deja un mensaje en el chatter con el operador."""
+        pesaje = self.env['pesaje.pesaje'].create({'vehicle_id': self.vehicle.id})
+        pesaje.register_weighing(15000.0, 'entrada', self.operador.id)
+        self.assertEqual(pesaje.gross_weight, 15000.0)
+        bodies = ' '.join(pesaje.message_ids.mapped('body'))
+        self.assertIn('Operador Test', bodies)
+        self.assertIn('15000', bodies)
+
+    def test_pesado_salida_crea_tara_y_chatter(self):
+        """Registrar salida crea la tara con operador y lo asienta en el chatter."""
+        pesaje = self.env['pesaje.pesaje'].create({'vehicle_id': self.vehicle.id})
+        pesaje.register_weighing(3000.0, 'salida', self.operador.id)
+        self.assertEqual(len(pesaje.tara_ids), 1)
+        self.assertEqual(pesaje.tara_ids.employee_id, self.operador)
+        bodies = ' '.join(pesaje.message_ids.mapped('body'))
+        self.assertIn('Operador Test', bodies)
+        self.assertIn('3000', bodies)

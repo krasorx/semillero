@@ -77,17 +77,7 @@ class PesajeController(http.Controller):
             return {'success': False, 'error': 'Pesaje no encontrado'}
         if pesaje.state in ('completado', 'cancelado'):
             return {'success': False, 'error': 'El pesaje está finalizado y no admite pesajes'}
-        weight = float(weight)
-        if tipo == 'entrada':
-            pesaje.gross_weight = weight
-        else:
-            request.env['pesaje.tara'].sudo().create({
-                'pesaje_id': pesaje.id,
-                'peso': weight,
-                'tipo': tipo,
-                'employee_id': int(employee_id) if employee_id else False,
-                'datetime': fields.Datetime.now(),
-            })
+        pesaje.register_weighing(weight, tipo, int(employee_id) if employee_id else False)
         return {'success': True, 'pesaje': self._pesaje_to_dict(pesaje)}
 
     @http.route('/pesaje/state', type='json', auth='user', methods=['POST'], csrf=False)
