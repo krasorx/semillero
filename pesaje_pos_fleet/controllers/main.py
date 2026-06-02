@@ -211,6 +211,9 @@ class PesajeController(http.Controller):
         return {
             'id': p.id,
             'name': p.name,
+            'operation_type': p.operation_type,
+            'customer_name': p.customer_id.name if p.customer_id else '',
+            'picking_name': p.picking_id.name if p.picking_id else '',
             'state': p.state,
             'substate_id': p.substate_id.id if p.substate_id else None,
             'substate_name': p.substate_id.name if p.substate_id else '',

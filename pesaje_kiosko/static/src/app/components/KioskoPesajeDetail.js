@@ -19,6 +19,9 @@ export class KioskoPesajeDetail extends Component {
                     <t t-if="!state.historicPesaje">
                         <span t-attf-class="kiosko-state-badge state-{{ props.pesaje.state }}"
                             t-esc="stateLabel(props.pesaje.state)"/>
+                        <t t-if="props.pesaje.operation_type === 'despacho'">
+                            <span class="kiosko-badge-historic">DESPACHO</span>
+                        </t>
                         <t t-if="props.pesaje.is_discard">
                             <span class="kiosko-badge-danger">DESCARTE</span>
                         </t>
@@ -180,6 +183,16 @@ export class KioskoPesajeDetail extends Component {
                                     <span class="kiosko-info-label">Operador</span>
                                     <span class="kiosko-info-value" t-esc="props.employee.name or '—'"/>
                                 </div>
+                                <t t-if="props.pesaje.operation_type === 'despacho'">
+                                    <div class="kiosko-info-row">
+                                        <span class="kiosko-info-label">Cliente</span>
+                                        <span class="kiosko-info-value" t-esc="props.pesaje.customer_name or '—'"/>
+                                    </div>
+                                    <div class="kiosko-info-row">
+                                        <span class="kiosko-info-label">Entrega</span>
+                                        <span class="kiosko-info-value" t-esc="props.pesaje.picking_name or '—'"/>
+                                    </div>
+                                </t>
                             </div>
 
                             <!-- Editable fields -->
