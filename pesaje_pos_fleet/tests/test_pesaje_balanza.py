@@ -1,4 +1,5 @@
 from odoo.tests.common import TransactionCase
+from odoo.exceptions import UserError
 
 
 class TestPesajeBalanza(TransactionCase):
@@ -47,3 +48,50 @@ class TestPesajeCamposNuevos(TransactionCase):
         self.assertFalse(pesaje.balanza_id)
         self.assertFalse(pesaje.transport_company_id)
         self.assertFalse(pesaje.parcela)
+
+
+class TestPesajeCompletar(TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        self.vehicle = self.env['fleet.vehicle'].create({
+            'model_id': self.env['fleet.vehicle.model'].create({
+                'name': 'TestModel',
+                'brand_id': self.env['fleet.vehicle.model.brand'].create({'name': 'TestBrand'}).id,
+            }).id,
+            'license_plate': 'COMP001',
+        })
+
+    def _pesaje_en_planta(self, gross_weight=0.0):
+        pesaje = self.env['pesaje.pesaje'].create({'vehicle_id': self.vehicle.id})
+        pesaje.write({'state': 'en_planta', 'gross_weight': gross_weight})
+        return pesaje
+
+    def test_completar_sin_tara_falla(self):
+        """Con peso bruto pero sin tara no se puede completar."""
+        pesaje = self._pesaje_en_planta(gross_weight=15000.0)
+        self.assertFalse(pesaje.tara_weight)
+        with self.assertRaises(UserError):
+            pesaje.action_complete()
+        self.assertEqual(pesaje.state, 'en_planta')
+
+    def test_completar_sin_bruto_falla(self):
+        """Sin peso bruto no se puede completar (con o sin tara)."""
+        pesaje = self._pesaje_en_planta(gross_weight=0.0)
+        self.env['pesaje.tara'].create({
+            'pesaje_id': pesaje.id, 'peso': 3000.0, 'tipo': 'salida',
+        })
+        with self.assertRaises(UserError):
+            pesaje.action_complete()
+        self.assertEqual(pesaje.state, 'en_planta')
+
+    def test_completar_con_bruto_y_tara_ok(self):
+        """Con peso bruto y tara registrada se completa correctamente."""
+        pesaje = self._pesaje_en_planta(gross_weight=15000.0)
+        self.env['pesaje.tara'].create({
+            'pesaje_id': pesaje.id, 'peso': 3000.0, 'tipo': 'salida',
+        })
+        self.assertEqual(pesaje.tara_weight, 3000.0)
+        pesaje.action_complete()
+        self.assertEqual(pesaje.state, 'completado')
+        self.assertEqual(pesaje.net_weight, 12000.0)

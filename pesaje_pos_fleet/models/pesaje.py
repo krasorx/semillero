@@ -120,6 +120,8 @@ class Pesaje(models.Model):
             raise UserError(_('Solo se puede completar un pesaje en estado "En Planta".'))
         if not self.gross_weight:
             raise UserError(_('Debe registrar el peso bruto antes de completar.'))
+        if not self.tara_weight:
+            raise UserError(_('Debe registrar la tara antes de completar.'))
         self.write({
             'state': 'completado',
             'exit_datetime': fields.Datetime.now(),
