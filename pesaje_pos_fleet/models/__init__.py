@@ -5,3 +5,4 @@ from . import pesaje_campo
 from . import pesaje_hibrido
 from . import res_config_settings
 from . import pesaje_balanza
+from . import stock_picking

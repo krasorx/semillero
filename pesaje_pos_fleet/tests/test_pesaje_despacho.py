@@ -99,3 +99,39 @@ class TestPesajeDespachoCompletar(TestDespachoBase):
         self.assertEqual(pesaje.state, 'completado')
         self.assertEqual(picking.state, 'done')
         self.assertFalse(pesaje.move_failed)
+
+
+class TestPesajeDespachoDesdeEntrega(TestDespachoBase):
+
+    def setUp(self):
+        super().setUp()
+        self.product = self.env['product.product'].create({
+            'name': 'Bolsa Soja 25kg', 'type': 'consu', 'is_storable': True,
+        })
+
+    def _entrega(self):
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [(0, 0, {'product_id': self.product.id, 'product_uom_qty': 5.0})],
+        })
+        so.action_confirm()
+        return so.picking_ids[:1]
+
+    def test_crear_pesaje_desde_entrega(self):
+        picking = self._entrega()
+        action = picking.action_create_pesaje_despacho()
+        self.assertTrue(picking.pesaje_id)
+        pesaje = picking.pesaje_id
+        self.assertEqual(pesaje.operation_type, 'despacho')
+        self.assertEqual(pesaje.picking_id, picking)
+        self.assertEqual(pesaje.customer_id, self.partner)
+        self.assertEqual(pesaje.state, 'fuera_planta')
+        self.assertEqual(action['res_id'], pesaje.id)
+
+    def test_no_duplica_pesaje(self):
+        picking = self._entrega()
+        picking.action_create_pesaje_despacho()
+        primero = picking.pesaje_id
+        picking.action_create_pesaje_despacho()
+        self.assertEqual(picking.pesaje_id, primero)
+        self.assertEqual(picking.pesaje_count, 1)
