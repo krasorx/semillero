@@ -8,6 +8,10 @@
               parent="menu_pesaje_consulta_root"
               action="action_pesaje_dashboard" sequence="1"/>
 
+    <menuitem id="menu_pesaje_consulta_board" name="Tablero de Subestados"
+              parent="menu_pesaje_consulta_root"
+              action="action_pesaje_substate_board" sequence="5"/>
+
     <menuitem id="menu_pesaje_consulta_pesajes" name="Pesajes"
               parent="menu_pesaje_consulta_root"
               action="action_pesaje_consulta" sequence="10"/>
