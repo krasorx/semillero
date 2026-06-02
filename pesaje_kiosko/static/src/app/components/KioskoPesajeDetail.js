@@ -22,6 +22,9 @@ export class KioskoPesajeDetail extends Component {
                         <t t-if="props.pesaje.operation_type === 'despacho'">
                             <span class="kiosko-badge-historic">DESPACHO</span>
                         </t>
+                        <t t-if="props.pesaje.operation_type === 'transferencia'">
+                            <span class="kiosko-badge-historic">TRANSFERENCIA</span>
+                        </t>
                         <t t-if="props.pesaje.is_discard">
                             <span class="kiosko-badge-danger">DESCARTE</span>
                         </t>
@@ -191,6 +194,12 @@ export class KioskoPesajeDetail extends Component {
                                     <div class="kiosko-info-row">
                                         <span class="kiosko-info-label">Entrega</span>
                                         <span class="kiosko-info-value" t-esc="props.pesaje.picking_name or '—'"/>
+                                    </div>
+                                </t>
+                                <t t-if="props.pesaje.operation_type === 'transferencia'">
+                                    <div class="kiosko-info-row">
+                                        <span class="kiosko-info-label">Origen</span>
+                                        <span class="kiosko-info-value" t-esc="props.pesaje.source_location_name or '—'"/>
                                     </div>
                                 </t>
                             </div>
