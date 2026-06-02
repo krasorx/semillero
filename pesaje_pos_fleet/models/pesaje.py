@@ -212,7 +212,7 @@ class Pesaje(models.Model):
                 'location_dest_id': location_dest.id,
                 'origin': self.name,
                 'move_ids': [(0, 0, {
-                    'name': self.product_id.name,
+                    'description_picking': self.product_id.name,
                     'product_id': self.product_id.id,
                     'product_uom_qty': self.net_weight,
                     'product_uom': self.uom_id.id or self.product_id.uom_id.id,

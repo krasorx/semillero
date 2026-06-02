@@ -101,6 +101,37 @@ class TestPesajeDespachoCompletar(TestDespachoBase):
         self.assertFalse(pesaje.move_failed)
 
 
+class TestPesajeIngresoStock(TestDespachoBase):
+    """El ingreso (caso inverso al despacho), al completar, debe crear un
+    remito de entrada validado e incrementar el stock por el peso neto."""
+
+    def setUp(self):
+        super().setUp()
+        self.product = self.env['product.product'].create({
+            'name': 'Maíz Granel', 'type': 'consu', 'is_storable': True,
+            'uom_id': self.env.ref('uom.product_uom_kgm').id,
+        })
+
+    def test_completar_ingreso_crea_remito_y_suma_stock(self):
+        qty_before = self.product.qty_available
+        pesaje = self.env['pesaje.pesaje'].create({
+            'vehicle_id': self.vehicle.id,
+            'product_id': self.product.id,
+        })
+        self.assertEqual(pesaje.operation_type, 'ingreso')
+        pesaje.state = 'en_planta'
+        pesaje.register_weighing(30000.0, 'entrada', self.operador.id)  # cargado
+        pesaje.register_weighing(12000.0, 'salida', self.operador.id)   # vacío
+        self.assertEqual(pesaje.net_weight, 18000.0)
+        pesaje.action_complete()
+        self.assertEqual(pesaje.state, 'completado')
+        self.assertFalse(pesaje.move_failed, 'el movimiento de stock no debe fallar')
+        self.assertTrue(pesaje.picking_id, 'debe crear un remito de entrada')
+        self.assertEqual(pesaje.picking_id.picking_type_id.code, 'incoming')
+        self.assertEqual(pesaje.picking_id.state, 'done')
+        self.assertEqual(self.product.qty_available, qty_before + 18000.0)
+
+
 class TestPesajeDespachoDesdeEntrega(TestDespachoBase):
 
     def setUp(self):
