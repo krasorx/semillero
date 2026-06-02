@@ -473,22 +473,22 @@
     background: #161b22;
     border: 1px solid #30363d;
     border-radius: 8px;
-    padding: 14px 16px;
-    min-height: 60px;
+    padding: 8px 14px;
+    min-height: 42px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
 }
 
 .kiosko-pad-value {
-    font-size: 30px;
+    font-size: 24px;
     font-weight: 700;
     color: #3fb950;
     font-variant-numeric: tabular-nums;
 }
 
 .kiosko-pad-placeholder {
-    font-size: 26px;
+    font-size: 22px;
     color: #30363d;
     font-variant-numeric: tabular-nums;
 }
@@ -501,7 +501,7 @@
 
 .kiosko-tipo-btn {
     flex: 1;
-    padding: 8px;
+    padding: 6px;
     border-radius: 6px;
     border: 1px solid #30363d;
     background: #21262d;
@@ -520,18 +520,18 @@
 .kiosko-numpad {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    gap: 6px;
     width: 100%;
 }
 
 .kiosko-numpad-key {
     padding: 0;
-    height: 56px;
+    height: 40px;
     border-radius: 8px;
     border: 1px solid #30363d;
     background: #21262d;
     color: #e6edf3;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 500;
     cursor: pointer;
     transition: background 0.12s, transform 0.08s;
@@ -541,7 +541,7 @@
 }
 .kiosko-numpad-key:hover { background: #30363d; }
 .kiosko-numpad-key:active { transform: scale(0.95); }
-.kiosko-numpad-key.del { color: #8b949e; font-size: 18px; }
+.kiosko-numpad-key.del { color: #8b949e; font-size: 16px; }
 .kiosko-numpad-empty {}
 
 /* ── SUBSTATE ─────────────────────────────────────────────────── */
@@ -1077,8 +1077,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    padding: 12px 20px;
+    gap: 6px;
+    padding: 8px 20px;
     max-width: 300px;
     margin: 0 auto;
 }

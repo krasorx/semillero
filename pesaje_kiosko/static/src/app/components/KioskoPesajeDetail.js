@@ -253,12 +253,6 @@ export class KioskoPesajeDetail extends Component {
                                         Ingresar a Planta
                                     </button>
                                 </t>
-                                <t t-if="props.pesaje.state === 'en_planta'">
-                                    <button class="kiosko-action-btn success full large"
-                                        t-on-click="() => this.doAction('complete')">
-                                        &#x2713; COMPLETAR PESAJE
-                                    </button>
-                                </t>
                                 <t t-if="props.pesaje.state !== 'completado' and props.pesaje.state !== 'cancelado'">
                                     <button class="kiosko-action-btn danger full"
                                         t-on-click="openCancelModal">

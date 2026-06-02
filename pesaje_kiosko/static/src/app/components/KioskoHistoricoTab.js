@@ -1,5 +1,5 @@
 /** @odoo-module */
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, useState, onWillStart, xml } from "@odoo/owl";
 
 export class KioskoHistoricoTab extends Component {
     static template = xml`
@@ -61,20 +61,19 @@ export class KioskoHistoricoTab extends Component {
     };
 
     setup() {
-        const today = new Date().toISOString().split('T')[0];
         this.state = useState({
             filterPatente: '',
-            filterFrom: today,
-            filterTo: today,
+            filterFrom: '',
+            filterTo: '',
             filterState: '',
             loading: false,
             error: '',
             rows: [],
         });
-    }
 
-    async willStart() {
-        await this.loadHistory();
+        onWillStart(async () => {
+            await this.loadHistory();
+        });
     }
 
     async loadHistory() {
