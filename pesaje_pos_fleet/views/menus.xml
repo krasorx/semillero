@@ -12,6 +12,8 @@
               action="action_pesaje_pesaje" sequence="10"/>
     <menuitem id="menu_pesaje_despachos" name="Despachos" parent="menu_pesaje_main"
               action="action_pesaje_despacho" sequence="15"/>
+    <menuitem id="menu_pesaje_transferencias" name="Transferencias" parent="menu_pesaje_main"
+              action="action_pesaje_transferencia" sequence="16"/>
 
     <menuitem id="menu_pesaje_reportes" name="Reportes" parent="menu_pesaje_root" sequence="80"/>
     <menuitem id="menu_pesaje_reporte_wizard" name="Generar Reporte" parent="menu_pesaje_reportes"
