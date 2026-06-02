@@ -27,11 +27,15 @@ class Pesaje(models.Model):
 
     # Fleet
     operation_type = fields.Selection(
-        [('ingreso', 'Ingreso'), ('despacho', 'Despacho')],
+        [('ingreso', 'Ingreso'), ('despacho', 'Despacho'), ('transferencia', 'Transferencia')],
         'Tipo de Operación', default='ingreso', required=True, tracking=True, index=True)
     vehicle_id = fields.Many2one('fleet.vehicle', 'Camión', tracking=True)
     customer_id = fields.Many2one('res.partner', 'Cliente', tracking=True,
-                                  help='Destinatario del despacho (de la venta/entrega).')
+                                  help='Destinatario del despacho (venta/entrega) o contraparte de la transferencia.')
+    source_location_id = fields.Many2one(
+        'stock.location', 'Depósito de Origen', tracking=True,
+        domain=[('usage', '=', 'internal')],
+        help='Ubicación interna desde la que ingresa el material (transferencia entre depósitos).')
     driver_id = fields.Many2one('hr.employee', 'Chófer', tracking=True)
 
     # Carga
