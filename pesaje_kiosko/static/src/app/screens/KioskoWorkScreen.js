@@ -30,6 +30,12 @@ export class KioskoWorkScreen extends Component {
                             <span class="kiosko-tab-badge" t-esc="countFor(tab.key)"/>
                         </button>
                     </t>
+                    <button
+                        t-attf-class="kiosko-state-tab {{ state.activeTab === 'transacciones' ? 'active' : '' }}"
+                        t-on-click="() => this.setTab('transacciones')">
+                        <span>&#x1F9FE;</span>
+                        <span class="kiosko-tab-label">Transacciones</span>
+                    </button>
                 </div>
 
                 <div class="kiosko-header-right">
@@ -47,27 +53,66 @@ export class KioskoWorkScreen extends Component {
 
             <div class="kiosko-body">
                 <div class="kiosko-list-panel">
-                    <div class="kiosko-list-toolbar">
-                        <button class="kiosko-btn-primary" t-on-click="openNewForm">+ Nuevo</button>
-                        <button class="kiosko-icon-btn" t-on-click="_loadPesajes" title="Actualizar">&#x21BA;</button>
-                    </div>
+                    <t t-if="state.activeTab !== 'transacciones'">
+                        <div class="kiosko-list-toolbar">
+                            <button class="kiosko-btn-primary" t-on-click="openNewForm">+ Nuevo</button>
+                            <button class="kiosko-icon-btn" t-on-click="_loadPesajes" title="Actualizar">&#x21BA;</button>
+                        </div>
 
-                    <div class="kiosko-list-content">
-                        <t t-if="state.loading">
-                            <div class="kiosko-list-loading">
-                                <div class="kiosko-spinner"/>
-                            </div>
-                        </t>
-                        <t t-if="!state.loading and filteredPesajes.length === 0">
-                            <div class="kiosko-empty">Sin pesajes en este estado</div>
-                        </t>
-                        <t t-foreach="filteredPesajes" t-as="p" t-key="p.id">
-                            <KioskoPesajeCard
-                                pesaje="p"
-                                selected="!!(state.selected and state.selected.id === p.id)"
-                                onSelect="(pesaje) => this.selectPesaje(pesaje)"/>
-                        </t>
-                    </div>
+                        <div class="kiosko-list-content">
+                            <t t-if="state.loading">
+                                <div class="kiosko-list-loading">
+                                    <div class="kiosko-spinner"/>
+                                </div>
+                            </t>
+                            <t t-if="!state.loading and filteredPesajes.length === 0">
+                                <div class="kiosko-empty">Sin pesajes en este estado</div>
+                            </t>
+                            <t t-foreach="filteredPesajes" t-as="p" t-key="p.id">
+                                <KioskoPesajeCard
+                                    pesaje="p"
+                                    selected="!!(state.selected and state.selected.id === p.id)"
+                                    onSelect="(pesaje) => this.selectPesaje(pesaje)"/>
+                            </t>
+                        </div>
+                    </t>
+
+                    <t t-if="state.activeTab === 'transacciones'">
+                        <div class="kiosko-tx-filters">
+                            <input class="kiosko-input" type="date" t-model="state.txFrom"
+                                t-on-change="loadTransacciones"/>
+                            <input class="kiosko-input" type="date" t-model="state.txTo"
+                                t-on-change="loadTransacciones"/>
+                            <select class="kiosko-select" t-model="state.txState"
+                                t-on-change="loadTransacciones">
+                                <option value="">Todos los estados</option>
+                                <option value="precargado">Precargado</option>
+                                <option value="en_camino">En Camino</option>
+                                <option value="fuera_planta">Fuera de Planta</option>
+                                <option value="en_planta">En Planta</option>
+                                <option value="completado">Completado</option>
+                                <option value="cancelado">Cancelado</option>
+                            </select>
+                            <button class="kiosko-icon-btn" t-on-click="loadTransacciones" title="Actualizar">&#x21BA;</button>
+                        </div>
+
+                        <div class="kiosko-list-content">
+                            <t t-if="state.txLoading">
+                                <div class="kiosko-list-loading">
+                                    <div class="kiosko-spinner"/>
+                                </div>
+                            </t>
+                            <t t-if="!state.txLoading and state.txRows.length === 0">
+                                <div class="kiosko-empty">Sin transacciones para los filtros</div>
+                            </t>
+                            <t t-foreach="state.txRows" t-as="p" t-key="p.id">
+                                <KioskoPesajeCard
+                                    pesaje="p"
+                                    selected="!!(state.selected and state.selected.id === p.id)"
+                                    onSelect="(pesaje) => this.selectPesaje(pesaje)"/>
+                            </t>
+                        </div>
+                    </t>
                 </div>
 
                 <div class="kiosko-detail-panel">
@@ -121,6 +166,12 @@ export class KioskoWorkScreen extends Component {
             activeTab: 'en_planta',
             showForm: false,
             editingPesaje: null,
+            // Transacciones (historial de todos los estados)
+            txRows: [],
+            txLoading: false,
+            txFrom: '',
+            txTo: '',
+            txState: '',
         });
         this._interval = null;
 
@@ -145,6 +196,26 @@ export class KioskoWorkScreen extends Component {
         this.state.activeTab = key;
         this.state.selected = null;
         this.state.showForm = false;
+        if (key === 'transacciones') {
+            this.loadTransacciones();
+        }
+    }
+
+    async loadTransacciones() {
+        this.state.txLoading = true;
+        try {
+            const filters = {};
+            if (this.state.txFrom) filters.date_from = this.state.txFrom;
+            if (this.state.txTo) filters.date_to = this.state.txTo;
+            if (this.state.txState) filters.state = this.state.txState;
+            const data = await this.props.api.loadTransacciones(filters);
+            this.state.txRows = data.pesajes || [];
+        } catch (e) {
+            console.warn('loadTransacciones error', e);
+            this.state.txRows = [];
+        } finally {
+            this.state.txLoading = false;
+        }
     }
 
     async _loadPesajes() {
@@ -196,6 +267,14 @@ export class KioskoWorkScreen extends Component {
 
     onDetailUpdate(pesaje) {
         if (!pesaje) return;
+        // En Transacciones se ven todos los estados: refrescar la fila y mantener
+        // seleccionado (queda de solo lectura si pasó a finalizado).
+        if (this.state.activeTab === 'transacciones') {
+            const i = this.state.txRows.findIndex(p => p.id === pesaje.id);
+            if (i >= 0) this.state.txRows[i] = pesaje;
+            this.state.selected = pesaje;
+            return;
+        }
         // Un pesaje finalizado sale de las pestañas activas (va al historial).
         if (pesaje.state === 'completado' || pesaje.state === 'cancelado') {
             this.state.pesajes = this.state.pesajes.filter(p => p.id !== pesaje.id);
@@ -212,6 +291,11 @@ export class KioskoWorkScreen extends Component {
     }
 
     onDetailCancel(pesaje) {
+        if (this.state.activeTab === 'transacciones') {
+            this.state.selected = null;
+            this.loadTransacciones();
+            return;
+        }
         this.state.pesajes = this.state.pesajes.filter(p => p.id !== pesaje.id);
         this.state.selected = null;
     }

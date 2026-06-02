@@ -58,21 +58,21 @@ export class KioskoPesajeDetail extends Component {
             </div>
 
             <!-- Pesar strip (always visible) -->
-            <t t-if="state.historicPesaje">
+            <t t-if="isReadonly">
                 <div class="kiosko-pesar-strip locked">
                     <div class="kiosko-pesar-strip-locked-msg">
-                        🔒 Modo histórico — solo lectura
+                        🔒 <t t-esc="readonlyMsg"/>
                     </div>
                 </div>
             </t>
-            <t t-if="!state.historicPesaje and props.pesaje.state !== 'en_planta'">
+            <t t-if="!isReadonly and props.pesaje.state !== 'en_planta'">
                 <div class="kiosko-pesar-strip locked">
                     <div class="kiosko-pesar-strip-locked-msg">
                         ⚖️ El camión debe estar <strong>En Planta</strong> para registrar peso
                     </div>
                 </div>
             </t>
-            <t t-if="!state.historicPesaje and props.pesaje.state === 'en_planta'">
+            <t t-if="!isReadonly and props.pesaje.state === 'en_planta'">
                 <div class="kiosko-pesar-strip">
                     <div class="kiosko-pesar-strip-active">
                         <div class="kiosko-pad-tipo">
@@ -143,8 +143,8 @@ export class KioskoPesajeDetail extends Component {
                 <t t-if="state.activeTab === 'transaccion'">
                     <div class="kiosko-tab-content">
 
-                        <t t-if="state.historicPesaje">
-                            <div class="kiosko-readonly-banner">📜 Modo histórico — solo lectura</div>
+                        <t t-if="isReadonly">
+                            <div class="kiosko-readonly-banner">📜 <t t-esc="readonlyMsg"/></div>
                             <div class="kiosko-info-grid">
                                 <div class="kiosko-info-row">
                                     <span class="kiosko-info-label">Referencia</span>
@@ -169,7 +169,7 @@ export class KioskoPesajeDetail extends Component {
                             </div>
                         </t>
 
-                        <t t-if="!state.historicPesaje">
+                        <t t-if="!isReadonly">
                             <!-- Read-only -->
                             <div class="kiosko-info-grid">
                                 <div class="kiosko-info-row">
@@ -280,8 +280,8 @@ export class KioskoPesajeDetail extends Component {
                 <t t-if="state.activeTab === 'transporte'">
                     <div class="kiosko-tab-content">
 
-                        <t t-if="state.historicPesaje">
-                            <div class="kiosko-readonly-banner">📜 Modo histórico — solo lectura</div>
+                        <t t-if="isReadonly">
+                            <div class="kiosko-readonly-banner">📜 <t t-esc="readonlyMsg"/></div>
                             <div class="kiosko-info-grid">
                                 <div class="kiosko-info-row">
                                     <span class="kiosko-info-label">Empresa Transportista</span>
@@ -318,7 +318,7 @@ export class KioskoPesajeDetail extends Component {
                             </div>
                         </t>
 
-                        <t t-if="!state.historicPesaje">
+                        <t t-if="!isReadonly">
                             <div class="kiosko-field">
                                 <label class="kiosko-label">Empresa Transportista</label>
                                 <select class="kiosko-select" t-model="state.e_transport_company_id">
@@ -392,8 +392,8 @@ export class KioskoPesajeDetail extends Component {
                 <t t-if="state.activeTab === 'articulos'">
                     <div class="kiosko-tab-content">
 
-                        <t t-if="state.historicPesaje">
-                            <div class="kiosko-readonly-banner">📜 Modo histórico — solo lectura</div>
+                        <t t-if="isReadonly">
+                            <div class="kiosko-readonly-banner">📜 <t t-esc="readonlyMsg"/></div>
                             <div class="kiosko-info-grid">
                                 <div class="kiosko-info-row">
                                     <span class="kiosko-info-label">Material</span>
@@ -420,7 +420,7 @@ export class KioskoPesajeDetail extends Component {
                             </div>
                         </t>
 
-                        <t t-if="!state.historicPesaje">
+                        <t t-if="!isReadonly">
                             <div class="kiosko-field">
                                 <label class="kiosko-label">Material</label>
                                 <select class="kiosko-select" t-model="state.e_product_id">
@@ -477,7 +477,7 @@ export class KioskoPesajeDetail extends Component {
                         pesaje="displayPesaje"
                         api="props.api"
                         onUpdate="(p) => this.onDocUpdate(p)"
-                        readonly="state.historicPesaje !== null"/>
+                        readonly="isReadonly"/>
                 </t>
 
                 <!-- ═══ Tab: Histórico ═══ -->
@@ -593,6 +593,17 @@ export class KioskoPesajeDetail extends Component {
         return (p.gross_weight || 0) > 0 && (p.tara_weight || 0) > 0;
     }
 
+    get isReadonly() {
+        return this.state.historicPesaje !== null
+            || ['completado', 'cancelado'].includes(this.props.pesaje.state);
+    }
+
+    get readonlyMsg() {
+        return this.state.historicPesaje
+            ? 'Modo histórico — solo lectura'
+            : 'Pesaje finalizado — solo lectura';
+    }
+
     switchTab(tab) {
         this.state.activeTab = tab;
         this.state.saveError = '';
@@ -610,7 +621,7 @@ export class KioskoPesajeDetail extends Component {
     }
 
     onDocUpdate(updatedPesaje) {
-        if (this.state.historicPesaje) return;
+        if (this.isReadonly) return;
         this.props.onUpdate(updatedPesaje);
     }
 

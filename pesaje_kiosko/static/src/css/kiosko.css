@@ -192,6 +192,24 @@
     scrollbar-color: #30363d transparent;
 }
 
+.kiosko-tx-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #21262d;
+    flex-shrink: 0;
+}
+
+.kiosko-tx-filters .kiosko-input,
+.kiosko-tx-filters .kiosko-select {
+    flex: 1 1 45%;
+    min-width: 0;
+    font-size: 12px;
+    padding: 6px 8px;
+}
+
 .kiosko-list-loading {
     display: flex;
     justify-content: center;
