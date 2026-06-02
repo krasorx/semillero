@@ -544,6 +544,13 @@
 .kiosko-numpad-key.del { color: #8b949e; font-size: 16px; }
 .kiosko-numpad-empty {}
 
+.kiosko-hint {
+    font-size: 12px;
+    color: #6e7681;
+    text-align: center;
+    margin-top: -4px;
+}
+
 /* ── SUBSTATE ─────────────────────────────────────────────────── */
 .kiosko-substate-pill {
     display: inline-block;

@@ -196,6 +196,12 @@ export class KioskoWorkScreen extends Component {
 
     onDetailUpdate(pesaje) {
         if (!pesaje) return;
+        // Un pesaje finalizado sale de las pestañas activas (va al historial).
+        if (pesaje.state === 'completado' || pesaje.state === 'cancelado') {
+            this.state.pesajes = this.state.pesajes.filter(p => p.id !== pesaje.id);
+            this.state.selected = null;
+            return;
+        }
         this.state.selected = pesaje;
         const idx = this.state.pesajes.findIndex(p => p.id === pesaje.id);
         if (idx >= 0) this.state.pesajes[idx] = pesaje;

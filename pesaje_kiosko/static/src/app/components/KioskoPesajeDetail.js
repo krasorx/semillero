@@ -81,7 +81,7 @@ export class KioskoPesajeDetail extends Component {
                                 t-on-click="() => state.weightTipo = 'entrada'">Entrada</button>
                             <button
                                 t-attf-class="kiosko-tipo-btn {{ state.weightTipo === 'salida' ? 'active' : '' }}"
-                                t-on-click="() => state.weightTipo = 'salida'">Tara</button>
+                                t-on-click="() => state.weightTipo = 'salida'">Salida</button>
                         </div>
                         <div class="kiosko-pad-display">
                             <t t-if="state.weightInput">
@@ -252,6 +252,17 @@ export class KioskoPesajeDetail extends Component {
                                         t-on-click="() => this.doAction('enter_plant')">
                                         Ingresar a Planta
                                     </button>
+                                </t>
+                                <t t-if="props.pesaje.state === 'en_planta'">
+                                    <button class="kiosko-action-btn success full large"
+                                        t-att-disabled="!canComplete or state.completing"
+                                        t-on-click="completePesaje">
+                                        <t t-if="state.completing">Finalizando...</t>
+                                        <t t-if="!state.completing">&#x2713; COMPLETAR PESAJE</t>
+                                    </button>
+                                    <t t-if="!canComplete">
+                                        <div class="kiosko-hint">Registrá peso de entrada y salida para completar</div>
+                                    </t>
                                 </t>
                                 <t t-if="props.pesaje.state !== 'completado' and props.pesaje.state !== 'cancelado'">
                                     <button class="kiosko-action-btn danger full"
@@ -524,6 +535,7 @@ export class KioskoPesajeDetail extends Component {
             weightInput: '',
             weightTipo: 'entrada',
             weightError: '',
+            completing: false,
             showCancelModal: false,
             cancelReason: '',
             saving: false,
@@ -574,6 +586,11 @@ export class KioskoPesajeDetail extends Component {
 
     get hasArFields() {
         return 'nro_inase' in this.props.pesaje;
+    }
+
+    get canComplete() {
+        const p = this.props.pesaje;
+        return (p.gross_weight || 0) > 0 && (p.tara_weight || 0) > 0;
     }
 
     switchTab(tab) {
@@ -666,15 +683,33 @@ export class KioskoPesajeDetail extends Component {
             this.state.weightError = 'Ingrese un peso válido';
             return;
         }
+        const tipo = this.state.weightTipo;
         const result = await this.props.api.registerWeight(
-            this.props.pesaje.id, w, this.state.weightTipo, this.props.employee.id
+            this.props.pesaje.id, w, tipo, this.props.employee.id
         );
         if (result.success) {
             this.state.weightInput = '';
             this.state.weightError = '';
+            // Tras la entrada, pasar automáticamente a salida.
+            if (tipo === 'entrada') this.state.weightTipo = 'salida';
             if (result.pesaje) this.props.onUpdate(result.pesaje);
         } else {
             this.state.weightError = result.error || 'Error al registrar peso';
+        }
+    }
+
+    async completePesaje() {
+        if (!this.canComplete || this.state.completing) return;
+        this.state.completing = true;
+        try {
+            const result = await this.props.api.changeState(this.props.pesaje.id, 'complete');
+            if (result.success && result.pesaje) {
+                this.props.onUpdate(result.pesaje);
+            } else if (result.error) {
+                alert(result.error);
+            }
+        } finally {
+            this.state.completing = false;
         }
     }
 
