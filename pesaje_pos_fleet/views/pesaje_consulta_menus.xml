@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- App separada de consulta, distinta de la app operativa menu_pesaje_root -->
+    <menuitem id="menu_pesaje_consulta_root" name="Consulta de Pesajes" sequence="51"
+              web_icon="pesaje_pos_fleet,static/description/icon.png"/>
+
+    <menuitem id="menu_pesaje_consulta_dashboard" name="Dashboard"
+              parent="menu_pesaje_consulta_root"
+              action="action_pesaje_dashboard" sequence="1"/>
+
+    <menuitem id="menu_pesaje_consulta_pesajes" name="Pesajes"
+              parent="menu_pesaje_consulta_root"
+              action="action_pesaje_consulta" sequence="10"/>
+
+    <menuitem id="menu_pesaje_consulta_taras" name="Taras"
+              parent="menu_pesaje_consulta_root"
+              action="action_pesaje_tara" sequence="20"/>
+
+    <menuitem id="menu_pesaje_consulta_balanzas" name="Balanzas"
+              parent="menu_pesaje_consulta_root"
+              action="action_pesaje_balanza" sequence="30"/>
+</odoo>
