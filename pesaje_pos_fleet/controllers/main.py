@@ -84,6 +84,8 @@ class PesajeController(http.Controller):
                 'employee_id': int(employee_id) if employee_id else False,
                 'datetime': fields.Datetime.now(),
             })
+        # Completado implícito: al tener bruto y tara, se cierra el pesaje.
+        pesaje._autocomplete_if_ready()
         return {'success': True, 'pesaje': self._pesaje_to_dict(pesaje)}
 
     @http.route('/pesaje/state', type='json', auth='user', methods=['POST'], csrf=False)

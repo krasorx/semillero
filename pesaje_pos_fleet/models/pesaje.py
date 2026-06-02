@@ -151,6 +151,14 @@ class Pesaje(models.Model):
                 'datetime': fields.Datetime.now(),
             })
 
+    def _autocomplete_if_ready(self):
+        """Completa el pesaje automáticamente cuando, estando en planta, ya tiene
+        registrados el peso bruto (entrada) y la tara (salida). Permite que el
+        completado sea implícito tras los dos pesajes, sin botón manual."""
+        for rec in self:
+            if rec.state == 'en_planta' and rec.gross_weight and rec.tara_weight:
+                rec.action_complete()
+
     def _create_stock_move(self):
         self.ensure_one()
         if not self.product_id or not self.net_weight:
