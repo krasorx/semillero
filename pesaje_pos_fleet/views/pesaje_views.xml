@@ -6,6 +6,7 @@
         <field name="arch" type="xml">
             <list string="Pesajes" decoration-danger="move_failed" decoration-success="state=='completado'" decoration-muted="state=='cancelado'">
                 <field name="name"/>
+                <field name="operation_type" widget="badge" decoration-info="operation_type == 'despacho'"/>
                 <field name="state" widget="badge" decoration-success="state=='completado'" decoration-warning="state=='en_planta'" decoration-danger="state=='cancelado'"/>
                 <field name="substate_id"/>
                 <field name="vehicle_id"/>
@@ -37,6 +38,7 @@
                 <sheet>
                     <div class="oe_title">
                         <h1><field name="name" readonly="1"/></h1>
+                        <field name="operation_type" widget="radio" options="{'horizontal': true}"/>
                     </div>
                     <group>
                         <group string="Vehículo y Transporte">
@@ -54,13 +56,17 @@
                         </group>
                     </group>
                     <group>
-                        <group string="Carga">
+                        <group string="Carga" invisible="operation_type == 'despacho'">
                             <field name="product_id"/>
                             <field name="lot_id"/>
                             <field name="campo_id"/>
                             <field name="parcela"/>
                             <field name="hibrido_id"/>
                             <field name="is_discard"/>
+                        </group>
+                        <group string="Despacho" invisible="operation_type != 'despacho'">
+                            <field name="customer_id"/>
+                            <field name="picking_id" readonly="1"/>
                         </group>
                         <group string="Pesaje">
                             <field name="gross_weight"/>
@@ -225,6 +231,15 @@
         <field name="view_mode">kanban,list,form</field>
         <field name="view_id" ref="view_pesaje_substate_kanban"/>
         <field name="domain">[('state', 'not in', ['completado', 'cancelado'])]</field>
+    </record>
+
+    <!-- Despachos -->
+    <record id="action_pesaje_despacho" model="ir.actions.act_window">
+        <field name="name">Despachos</field>
+        <field name="res_model">pesaje.pesaje</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('operation_type', '=', 'despacho')]</field>
+        <field name="context">{'default_operation_type': 'despacho'}</field>
     </record>
 
     <!-- Wizard cancelar action -->

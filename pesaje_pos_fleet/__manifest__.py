@@ -12,6 +12,7 @@
         'views/pesaje_campo_views.xml',
         'views/pesaje_hibrido_views.xml',
         'views/pesaje_views.xml',
+        'views/stock_picking_views.xml',
         'wizards/pesaje_cancelar_views.xml',
         'wizards/report_pesaje_wizard_views.xml',
         # 'views/res_config_settings_views.xml',  # TODO: ajustar a sintaxis Odoo 19

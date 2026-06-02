@@ -20,6 +20,10 @@
               parent="menu_pesaje_consulta_root"
               action="action_pesaje_tara" sequence="20"/>
 
+    <menuitem id="menu_pesaje_consulta_despachos" name="Despachos"
+              parent="menu_pesaje_consulta_root"
+              action="action_pesaje_despacho" sequence="25"/>
+
     <menuitem id="menu_pesaje_consulta_balanzas" name="Balanzas"
               parent="menu_pesaje_consulta_root"
               action="action_pesaje_balanza" sequence="30"/>
