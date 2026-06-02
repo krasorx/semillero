@@ -19,4 +19,13 @@
     <menuitem id="menu_pesaje_consulta_balanzas" name="Balanzas"
               parent="menu_pesaje_consulta_root"
               action="action_pesaje_balanza" sequence="30"/>
+
+    <menuitem id="menu_pesaje_consulta_config" name="Configuración"
+              parent="menu_pesaje_consulta_root" sequence="40"/>
+    <menuitem id="menu_pesaje_consulta_campos" name="Campos"
+              parent="menu_pesaje_consulta_config"
+              action="action_pesaje_campo" sequence="10"/>
+    <menuitem id="menu_pesaje_consulta_hibridos" name="Híbridos"
+              parent="menu_pesaje_consulta_config"
+              action="action_pesaje_hibrido" sequence="20"/>
 </odoo>
