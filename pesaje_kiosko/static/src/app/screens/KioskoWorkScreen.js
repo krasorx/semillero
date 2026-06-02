@@ -81,7 +81,7 @@ export class KioskoWorkScreen extends Component {
                     <t t-if="state.showForm">
                         <KioskoForm
                             masters="props.masters"
-                            pesaje="state.editingPesaje"
+                            pesaje="state.editingPesaje or undefined"
                             api="props.api"
                             employee="props.employee"
                             onSave="(p) => this.onFormSave(p)"
