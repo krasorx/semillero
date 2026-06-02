@@ -4,7 +4,7 @@
     'summary': 'Interfaz POS ligera para pesajes de camiones con integración Fleet e Inventario',
     'author': 'Balanza',
     'category': 'Operations/Inventory',
-    'depends': ['fleet', 'stock', 'hr', 'product', 'base_setup'],
+    'depends': ['fleet', 'stock', 'hr', 'product', 'base_setup', 'sale_stock'],
     'data': [
         'security/ir.model.access.csv',
         'data/pesaje_state_data.xml',

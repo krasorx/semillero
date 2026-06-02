@@ -26,7 +26,12 @@ class Pesaje(models.Model):
                                    group_expand='_read_group_substate_ids')
 
     # Fleet
-    vehicle_id = fields.Many2one('fleet.vehicle', 'Camión', required=True, tracking=True)
+    operation_type = fields.Selection(
+        [('ingreso', 'Ingreso'), ('despacho', 'Despacho')],
+        'Tipo de Operación', default='ingreso', required=True, tracking=True, index=True)
+    vehicle_id = fields.Many2one('fleet.vehicle', 'Camión', tracking=True)
+    customer_id = fields.Many2one('res.partner', 'Cliente', tracking=True,
+                                  help='Destinatario del despacho (de la venta/entrega).')
     driver_id = fields.Many2one('hr.employee', 'Chófer', tracking=True)
 
     # Carga
