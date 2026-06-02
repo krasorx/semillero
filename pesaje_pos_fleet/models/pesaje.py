@@ -140,6 +140,8 @@ class Pesaje(models.Model):
             raise UserError(_('Debe registrar el peso de entrada antes de completar.'))
         if not self.tara_weight:
             raise UserError(_('Debe registrar el peso de salida antes de completar.'))
+        if self.operation_type == 'transferencia' and not self.source_location_id:
+            raise UserError(_('Debe indicar el depósito de origen para una transferencia.'))
         terminado = self.env.ref('pesaje_pos_fleet.substate_terminado', raise_if_not_found=False)
         vals = {
             'state': 'completado',
@@ -150,6 +152,8 @@ class Pesaje(models.Model):
         self.write(vals)
         if self.operation_type == 'despacho':
             self._validate_outgoing_delivery()
+        elif self.operation_type == 'transferencia':
+            self._create_internal_transfer()
         else:
             self._create_incoming_move()
 
@@ -232,6 +236,45 @@ class Pesaje(models.Model):
             self.move_failed = True
             _logger.error('Error al crear stock.move para pesaje %s: %s', self.name, e)
 
+    def _create_internal_transfer(self):
+        """Crea y valida una transferencia interna desde source_location_id hacia el
+        Stock del depósito principal, por el peso neto. Errores -> move_failed."""
+        self.ensure_one()
+        if not self.product_id or not self.net_weight:
+            return
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        location_src = self.source_location_id
+        location_dest = warehouse.lot_stock_id
+        picking_type = warehouse.int_type_id
+        if not location_src or not location_dest or not picking_type:
+            self.move_failed = True
+            _logger.warning('Pesaje %s: no se pudo determinar ubicaciones/tipo para la transferencia interna', self.name)
+            return
+        try:
+            picking = self.env['stock.picking'].create({
+                'picking_type_id': picking_type.id,
+                'location_id': location_src.id,
+                'location_dest_id': location_dest.id,
+                'origin': self.name,
+                'partner_id': self.customer_id.id or False,
+                'move_ids': [(0, 0, {
+                    'description_picking': self.product_id.name,
+                    'product_id': self.product_id.id,
+                    'product_uom_qty': self.net_weight,
+                    'product_uom': self.uom_id.id or self.product_id.uom_id.id,
+                    'location_id': location_src.id,
+                    'location_dest_id': location_dest.id,
+                    'lot_ids': [(4, self.lot_id.id)] if self.lot_id else [],
+                })],
+            })
+            picking.action_confirm()
+            picking.action_assign()
+            picking.button_validate()
+            self.picking_id = picking
+        except Exception as e:
+            self.move_failed = True
+            _logger.error('Error al crear transferencia interna para pesaje %s: %s', self.name, e)
+
     def _validate_outgoing_delivery(self):
         """Valida la entrega (picking de salida) vinculada al despacho,
         descontando stock. Errores o intervención manual -> move_failed."""
@@ -259,6 +302,8 @@ class Pesaje(models.Model):
         self.move_failed = False
         if self.operation_type == 'despacho':
             self._validate_outgoing_delivery()
+        elif self.operation_type == 'transferencia':
+            self._create_internal_transfer()
         else:
             self._create_incoming_move()
 
