@@ -198,6 +198,25 @@ class PesajeController(http.Controller):
         )
         return {'pesajes': [self._pesaje_to_dict(p) for p in pesajes]}
 
+    @http.route('/pesaje/transacciones', type='json', auth='user', methods=['POST'])
+    def get_transacciones(self, date_from=None, date_to=None, state=None, balanza_id=None, limit=100, **kw):
+        """Lista pesajes de todos los estados (en proceso y finalizados) con
+        filtros opcionales por fecha (sobre create_date, presente en todos los
+        estados) y estado. Pensado para el historial 'Transacciones' del kiosko."""
+        domain = []
+        if state:
+            domain.append(('state', '=', state))
+        if date_from:
+            domain.append(('create_date', '>=', date_from + ' 00:00:00'))
+        if date_to:
+            domain.append(('create_date', '<=', date_to + ' 23:59:59'))
+        if balanza_id:
+            domain.append(('balanza_id', '=', int(balanza_id)))
+        pesajes = request.env['pesaje.pesaje'].sudo().search(
+            domain, order='create_date desc', limit=int(limit)
+        )
+        return {'pesajes': [self._pesaje_to_dict(p) for p in pesajes]}
+
     def _pesaje_to_dict(self, p):
         return {
             'id': p.id,

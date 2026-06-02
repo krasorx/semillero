@@ -131,6 +131,10 @@ export class PesajeAPI {
         return await this._call('/pesaje/history', filters);
     }
 
+    async loadTransacciones(filters = {}) {
+        return await this._call('/pesaje/transacciones', filters);
+    }
+
     async _flushQueue() {
         if (this._syncRunning) return;
         this._syncRunning = true;
