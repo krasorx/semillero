@@ -128,6 +128,36 @@
         </field>
     </record>
 
+    <record id="view_pesaje_substate_kanban" model="ir.ui.view">
+        <field name="name">pesaje.pesaje.substate.kanban</field>
+        <field name="model">pesaje.pesaje</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="substate_id" class="o_kanban_small_column"
+                    group_create="false" group_delete="false" group_edit="false">
+                <field name="name"/>
+                <field name="state"/>
+                <field name="substate_id"/>
+                <field name="vehicle_id"/>
+                <field name="driver_id"/>
+                <field name="product_id"/>
+                <field name="net_weight"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <div class="d-flex justify-content-between">
+                                <strong><field name="name"/></strong>
+                                <span class="badge text-bg-light"><field name="state"/></span>
+                            </div>
+                            <div><field name="vehicle_id"/> — <field name="driver_id"/></div>
+                            <div><field name="product_id"/></div>
+                            <div>Neto: <field name="net_weight"/> kg</div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="view_pesaje_search" model="ir.ui.view">
         <field name="name">pesaje.pesaje.search</field>
         <field name="model">pesaje.pesaje</field>
@@ -186,6 +216,15 @@
         <field name="res_model">pesaje.pesaje</field>
         <field name="view_mode">list,kanban,pivot,graph,form</field>
         <field name="context">{'search_default_en_planta': 1}</field>
+    </record>
+
+    <!-- Tablero kanban por subestado -->
+    <record id="action_pesaje_substate_board" model="ir.actions.act_window">
+        <field name="name">Tablero de Subestados</field>
+        <field name="res_model">pesaje.pesaje</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="view_id" ref="view_pesaje_substate_kanban"/>
+        <field name="domain">[('state', 'not in', ['completado', 'cancelado'])]</field>
     </record>
 
     <!-- Wizard cancelar action -->

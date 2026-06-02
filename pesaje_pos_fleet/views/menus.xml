@@ -6,6 +6,8 @@
     <menuitem id="menu_pesaje_main" name="Operaciones" parent="menu_pesaje_root" sequence="10"/>
     <menuitem id="menu_pesaje_pos" name="Abrir Balanza POS" parent="menu_pesaje_main"
               action="action_pesaje_pos_screen" sequence="1"/>
+    <menuitem id="menu_pesaje_substate_board" name="Tablero de Subestados" parent="menu_pesaje_main"
+              action="action_pesaje_substate_board" sequence="5"/>
     <menuitem id="menu_pesaje_pesajes" name="Pesajes" parent="menu_pesaje_main"
               action="action_pesaje_pesaje" sequence="10"/>
 

@@ -22,7 +22,8 @@ class Pesaje(models.Model):
     name = fields.Char('Referencia', readonly=True, copy=False, default='Nuevo')
     state = fields.Selection(STATES, 'Estado', default='precargado', tracking=True, index=True)
     substate_id = fields.Many2one('pesaje.substate', 'Subestado', tracking=True,
-                                   domain=[('active', '=', True)])
+                                   domain=[('active', '=', True)],
+                                   group_expand='_read_group_substate_ids')
 
     # Fleet
     vehicle_id = fields.Many2one('fleet.vehicle', 'Camión', required=True, tracking=True)
@@ -76,6 +77,12 @@ class Pesaje(models.Model):
             if vals.get('name', 'Nuevo') == 'Nuevo':
                 vals['name'] = self.env['ir.sequence'].next_by_code('pesaje.pesaje') or 'Nuevo'
         return super().create(vals_list)
+
+    @api.model
+    def _read_group_substate_ids(self, substates, domain):
+        """Muestra todas las columnas de subestado activas en el kanban,
+        incluso las que no tienen pesajes."""
+        return self.env['pesaje.substate'].search([('active', '=', True)])
 
     @api.depends('gross_weight', 'tara_ids.peso', 'tara_ids.tipo')
     def _compute_net_weight(self):
