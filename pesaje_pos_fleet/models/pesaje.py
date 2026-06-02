@@ -160,7 +160,15 @@ class Pesaje(models.Model):
         self.ensure_one()
         weight = float(weight)
         employee = self.env['hr.employee'].browse(int(employee_id)) if employee_id else self.employee_id
-        if tipo == 'entrada':
+        # Neto = bruto - tara siempre. El mapeo del momento (entrada/salida) a
+        # bruto/tara depende de la dirección:
+        #   ingreso:  entrada = cargado (bruto), salida = vacío (tara)
+        #   despacho: entrada = vacío (tara),    salida = cargado (bruto)
+        if self.operation_type == 'despacho':
+            is_gross = (tipo == 'salida')
+        else:
+            is_gross = (tipo == 'entrada')
+        if is_gross:
             self.gross_weight = weight
         else:
             self.env['pesaje.tara'].create({

@@ -31,3 +31,32 @@ class TestPesajeDespachoCampos(TestDespachoBase):
         self.assertEqual(pesaje.operation_type, 'despacho')
         self.assertFalse(pesaje.vehicle_id)
         self.assertEqual(pesaje.customer_id, self.partner)
+
+
+class TestPesajeDespachoMapeo(TestDespachoBase):
+
+    def _en_planta(self, operation_type):
+        pesaje = self.env['pesaje.pesaje'].create({
+            'operation_type': operation_type,
+            'vehicle_id': self.vehicle.id,
+            'customer_id': self.partner.id if operation_type == 'despacho' else False,
+        })
+        pesaje.state = 'en_planta'
+        return pesaje
+
+    def test_despacho_entrada_es_tara_salida_es_bruto(self):
+        pesaje = self._en_planta('despacho')
+        pesaje.register_weighing(8000.0, 'entrada', self.operador.id)   # vacío -> tara
+        self.assertEqual(pesaje.gross_weight, 0.0)
+        self.assertEqual(pesaje.tara_weight, 8000.0)
+        pesaje.register_weighing(20000.0, 'salida', self.operador.id)   # cargado -> bruto
+        self.assertEqual(pesaje.gross_weight, 20000.0)
+        self.assertEqual(pesaje.net_weight, 12000.0)
+
+    def test_ingreso_entrada_es_bruto_salida_es_tara(self):
+        pesaje = self._en_planta('ingreso')
+        pesaje.register_weighing(20000.0, 'entrada', self.operador.id)  # cargado -> bruto
+        self.assertEqual(pesaje.gross_weight, 20000.0)
+        pesaje.register_weighing(8000.0, 'salida', self.operador.id)    # vacío -> tara
+        self.assertEqual(pesaje.tara_weight, 8000.0)
+        self.assertEqual(pesaje.net_weight, 12000.0)
