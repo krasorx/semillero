@@ -60,3 +60,42 @@ class TestPesajeDespachoMapeo(TestDespachoBase):
         pesaje.register_weighing(8000.0, 'salida', self.operador.id)    # vacío -> tara
         self.assertEqual(pesaje.tara_weight, 8000.0)
         self.assertEqual(pesaje.net_weight, 12000.0)
+
+
+class TestPesajeDespachoCompletar(TestDespachoBase):
+
+    def setUp(self):
+        super().setUp()
+        self.product = self.env['product.product'].create({
+            'name': 'Bolsa Maíz 25kg', 'type': 'consu', 'is_storable': True,
+        })
+        self.warehouse = self.env['stock.warehouse'].search([], limit=1)
+        self.env['stock.quant']._update_available_quantity(
+            self.product, self.warehouse.lot_stock_id, 100.0)
+
+    def _entrega_confirmada(self):
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [(0, 0, {'product_id': self.product.id, 'product_uom_qty': 10.0})],
+        })
+        so.action_confirm()
+        picking = so.picking_ids[:1]
+        self.assertTrue(picking, 'La venta debería generar una entrega')
+        picking.action_assign()
+        return picking
+
+    def test_completar_despacho_valida_entrega(self):
+        picking = self._entrega_confirmada()
+        pesaje = self.env['pesaje.pesaje'].create({
+            'operation_type': 'despacho',
+            'vehicle_id': self.vehicle.id,
+            'customer_id': self.partner.id,
+            'picking_id': picking.id,
+        })
+        pesaje.state = 'en_planta'
+        pesaje.register_weighing(8000.0, 'entrada', self.operador.id)   # vacío
+        pesaje.register_weighing(20000.0, 'salida', self.operador.id)   # cargado
+        pesaje.action_complete()
+        self.assertEqual(pesaje.state, 'completado')
+        self.assertEqual(picking.state, 'done')
+        self.assertFalse(pesaje.move_failed)

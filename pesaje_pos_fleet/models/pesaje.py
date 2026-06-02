@@ -130,6 +130,8 @@ class Pesaje(models.Model):
     def action_complete(self):
         if self.state not in ('en_planta',):
             raise UserError(_('Solo se puede completar un pesaje en estado "En Planta".'))
+        if not self.vehicle_id:
+            raise UserError(_('Debe asignar un camión antes de completar.'))
         if not self.gross_weight:
             raise UserError(_('Debe registrar el peso de entrada antes de completar.'))
         if not self.tara_weight:
@@ -142,7 +144,10 @@ class Pesaje(models.Model):
         if terminado:
             vals['substate_id'] = terminado.id
         self.write(vals)
-        self._create_stock_move()
+        if self.operation_type == 'despacho':
+            self._validate_outgoing_delivery()
+        else:
+            self._create_incoming_move()
 
     def action_cancel(self):
         if self.state == 'completado':
@@ -190,7 +195,7 @@ class Pesaje(models.Model):
         self.ensure_one()
         self.register_weighing(weight, tipo, self.employee_id.id)
 
-    def _create_stock_move(self):
+    def _create_incoming_move(self):
         self.ensure_one()
         if not self.product_id or not self.net_weight:
             return
@@ -223,10 +228,35 @@ class Pesaje(models.Model):
             self.move_failed = True
             _logger.error('Error al crear stock.move para pesaje %s: %s', self.name, e)
 
+    def _validate_outgoing_delivery(self):
+        """Valida la entrega (picking de salida) vinculada al despacho,
+        descontando stock. Errores o intervención manual -> move_failed."""
+        self.ensure_one()
+        picking = self.picking_id
+        if not picking:
+            self.move_failed = True
+            _logger.warning('Despacho %s sin entrega vinculada', self.name)
+            return
+        try:
+            if picking.state not in ('done', 'cancel'):
+                result = picking.button_validate()
+                if isinstance(result, dict):
+                    # button_validate devolvió un wizard (back-order, faltantes, etc.)
+                    self.move_failed = True
+                    _logger.warning('Despacho %s: la entrega requiere intervención manual', self.name)
+                    return
+            self.move_failed = False
+        except Exception as e:
+            self.move_failed = True
+            _logger.error('Error al validar entrega del despacho %s: %s', self.name, e)
+
     def action_retry_stock_move(self):
         self.ensure_one()
         self.move_failed = False
-        self._create_stock_move()
+        if self.operation_type == 'despacho':
+            self._validate_outgoing_delivery()
+        else:
+            self._create_incoming_move()
 
     def action_open_cancel_wizard(self):
         self.ensure_one()
