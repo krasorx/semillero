@@ -47,7 +47,7 @@
                             <field name="balanza_id"/>
                         </group>
                         <group string="Estado">
-                            <field name="substate_id" invisible="state != 'en_planta'"/>
+                            <field name="substate_id" readonly="state in ('completado', 'cancelado')"/>
                             <field name="entry_datetime"/>
                             <field name="exit_datetime"/>
                             <field name="time_in_plant"/>
